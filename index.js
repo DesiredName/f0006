@@ -11,6 +11,7 @@ const date_range_option = Object.freeze({
     LY: 'ly',
     LIFE: 'Lifetime',
 });
+
 const date_range = Object.freeze({
     [date_range_option.L7D]: 'Last 7 days',
     [date_range_option.L28D]: 'Last 28 days',
@@ -20,34 +21,64 @@ const date_range = Object.freeze({
 });
 
 const compute_date_range_DaysFormatted = (option) => {
-    const now = Date.now();
     const day = 24 * 60 * 60 * 1000;
+    const now = Date.now() - day;
+
+    const curr = new Date(now);
     let prev = 0;
 
     switch (option) {
         default:
         case date_range_option.L7D:
-            prev = now - 7 * day;
+            prev = new Date(now - 6 * day);
             break;
 
         case date_range_option.L28D:
-            prev = now - 28 * day;
+            prev = new Date(now - 27 * day);
             break;
 
         case date_range_option.L90D:
-            prev = now -90 * day;
+            prev = new Date(now - 89 * day);
             break;
 
         case date_range_option.LY:
-            prev = now - 365 * day;
+            prev = new Date(now - 364 * day);
             break;
 
         case date_range_option.LIFE:
-            prev = new Date(2023, 3,19); // 19 Apr 2023
+            prev = new Date(2023, 3, 19); // 19 Apr 2023
             break;
     }
 
-    return new Date(prev).toDateString() + ' - ' + new Date(now).toDateString()
+    if (curr.getFullYear() === prev.getFullYear()) {
+        if (curr.getMonth() === prev.getMonth()) {
+            const f = Intl.DateTimeFormat(undefined, {
+                month: 'short'
+            });
+            const month = f.format(curr);
+
+            return month + ' ' + prev.getDate() + ' - ' + curr.getDate() + ', ' + curr.getFullYear();
+        } else {
+            const f = Intl.DateTimeFormat(undefined, {
+                day: '2-digit',
+                month: 'short'
+            });
+            const month_curr = f.format(curr);
+            const month_prev = f.format(prev);
+
+            return month_prev + ' - ' + month_curr + ', ' + curr.getFullYear();
+        }
+    } else {
+        const f = Intl.DateTimeFormat(undefined, {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+        });
+        const month_curr = f.format(curr);
+        const month_prev = f.format(prev);
+
+        return month_prev + ' - ' + month_curr;
+    }
 }
 
 const state = reactive({
