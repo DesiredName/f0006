@@ -19,8 +19,35 @@ const date_range = Object.freeze({
     [date_range_option.LIFE]: 'Lifetime',
 });
 
-const compute_date_range_DaysFormatted = (date_range_option) => {
-    return 'test';
+const compute_date_range_DaysFormatted = (option) => {
+    const now = Date.now();
+    const day = 24 * 60 * 60 * 1000;
+    let prev = 0;
+
+    switch (option) {
+        default:
+        case date_range_option.L7D:
+            prev = now - 7 * day;
+            break;
+
+        case date_range_option.L28D:
+            prev = now - 28 * day;
+            break;
+
+        case date_range_option.L90D:
+            prev = now -90 * day;
+            break;
+
+        case date_range_option.LY:
+            prev = now - 365 * day;
+            break;
+
+        case date_range_option.LIFE:
+            prev = new Date(2023, 3,19); // 19 Apr 2023
+            break;
+    }
+
+    return new Date(prev).toDateString() + ' - ' + new Date(now).toDateString()
 }
 
 const state = reactive({
@@ -30,12 +57,12 @@ const state = reactive({
     isDateSelectorVisible: false,
     selectedDateRange_DaysFormatted: compute_date_range_DaysFormatted(date_range_option.L7D),
     selectedDateRangeOption: date_range[date_range_option.L7D],
-    
+
     toggleDateSelector() {
         this.isDateSelectorVisible = !this.isDateSelectorVisible;
         this.isDateSelectorVisible === true
             ? this.showDateSelector()
-            : this.hideDateSelector();      
+            : this.hideDateSelector();
     },
     hideDateSelector() {
         this.isDateSelectorVisible = false;
@@ -43,9 +70,9 @@ const state = reactive({
     },
     showDateSelector() {
         this.isDateSelectorVisible = true;
-        
+
         const box = date_range_selector_toggler_el.getBoundingClientRect();
-        
+
         date_range_selector_el.style.display = 'block';
         date_range_selector_el.style.top = box.top + 'px';
         date_range_selector_el.style.left = box.left + 'px';
@@ -54,6 +81,7 @@ const state = reactive({
     selectDateRangeId(option) {
         this.hideDateSelector();
         this.selectedDateRangeOption = date_range[option];
+        this.selectedDateRange_DaysFormatted = compute_date_range_DaysFormatted(option)
     }
 });
 
