@@ -63,11 +63,11 @@ const compute_date_range_DaysFormatted = (option) => {
 
     if (curr.getFullYear() === prev.getFullYear()) {
         if (option === date_range_option.Y2025) {
-            const f1 = Intl.DateTimeFormat(undefined, {
+            const f1 = Intl.DateTimeFormat('en', {
                 day: '2-digit',
                 month: 'short',
             });
-            const f2 = Intl.DateTimeFormat(undefined, {
+            const f2 = Intl.DateTimeFormat('en', {
                 day: '2-digit',
                 month: 'short',
                 year: 'numeric'
@@ -78,11 +78,11 @@ const compute_date_range_DaysFormatted = (option) => {
 
             return month_prev + ' - ' + month_curr;
         } else if (option === date_range_option.Y2024) {
-            const f1 = Intl.DateTimeFormat(undefined, {
+            const f1 = Intl.DateTimeFormat('en', {
                 day: '2-digit',
                 month: 'short',
             });
-            const f2 = Intl.DateTimeFormat(undefined, {
+            const f2 = Intl.DateTimeFormat('en', {
                 day: '2-digit',
                 month: 'short',
                 year: 'numeric'
@@ -93,14 +93,14 @@ const compute_date_range_DaysFormatted = (option) => {
 
             return month_prev + ' - ' + month_curr;
         } else if (curr.getMonth() === prev.getMonth()) {
-            const f = Intl.DateTimeFormat(undefined, {
+            const f = Intl.DateTimeFormat('en', {
                 month: 'short'
             });
             const month = f.format(curr);
 
             return month + ' ' + prev.getDate() + ' - ' + curr.getDate() + ', ' + curr.getFullYear();
         } else {
-            const f = Intl.DateTimeFormat(undefined, {
+            const f = Intl.DateTimeFormat('en', {
                 day: '2-digit',
                 month: 'short'
             });
@@ -110,7 +110,7 @@ const compute_date_range_DaysFormatted = (option) => {
             return month_prev + ' - ' + month_curr + ', ' + curr.getFullYear();
         }
     } else {
-        const f = Intl.DateTimeFormat(undefined, {
+        const f = Intl.DateTimeFormat('en', {
             day: '2-digit',
             month: 'short',
             year: 'numeric'
@@ -122,12 +122,45 @@ const compute_date_range_DaysFormatted = (option) => {
     }
 }
 
+const compute_live_viewers = (num) => {
+    const f = new Intl.NumberFormat('en', {
+        style: 'decimal',
+    });
+
+    return f.format(num);
+}
+
 const state = reactive({
     date_range_option,
     date_range,
 
     view_option,
     selected_view_option: null,
+    view_options_datas: {
+        [view_option.VIEWS]: {
+            figure: 117,
+            icon: null,
+            text: '8% less than previous 7 days'
+        },
+        [view_option.WATCH]: {
+            figure: 4.1,
+            icon: 'up',
+            text: '14% more than previous 7 days'
+        },
+        [view_option.SUBS]: {
+            figure: 4,
+            icon: 'up',
+            text: '200% more than previous 7 days'
+        },
+        [view_option.REV]: {
+            figure: 4,
+            icon: 'up',
+            text: '200% more than previous 7 days'
+        }
+    },
+    sidebar_datas: {
+        live_viewers: compute_live_viewers(1734)
+    },
 
     isDateSelectorVisible: false,
     selectedDateRange_DaysFormatted: compute_date_range_DaysFormatted(date_range_option.L7D),
@@ -163,15 +196,28 @@ const state = reactive({
         this.selected_view_option?.classList.remove('iron-selected')
         this.selected_view_option = document.getElementById(option);
         this.selected_view_option?.classList.add('iron-selected')
-    }
-});
+    },
+    
+    setLiveViewers(e) {
+        e.preventDefault();
 
+        const val = prompt('Please set number of live viewers (comma is not required)', this.sidebar_datas.live_viewers);
+        
+        if (val != null) {
+            this.sidebar_datas.live_viewers = compute_live_viewers(val);
+        }
+    },
+});
 
 createApp({
     state,
     mounted() {
         state.hideDateSelector();
-        state.selectDateRangeId(date_range.l7d);
+        state.selectDateRangeId(date_range_option.L7D);
         state.selectChartView(view_option.WATCH);
+    },
+    uploadChart1Datas(e) {
+        e.preventDefault();
+        alert(10);
     },
 }).mount();
