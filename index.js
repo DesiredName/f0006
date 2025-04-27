@@ -3,6 +3,7 @@ import { createApp, reactive } from 'https://unpkg.com/petite-vue?module'
 // elements
 const date_range_selector_toggler_el = document.querySelector("[data-id='date_range_selector_toggler']")
 const date_range_selector_el = document.querySelector("[data-id='date_range_selector']");
+const chart_1_placeholder = document.querySelector("[data-id='chart-1-placeholder']");
 
 const date_range_option = Object.freeze({
     L7D: 'l7d',
@@ -197,27 +198,102 @@ const state = reactive({
         this.selected_view_option = document.getElementById(option);
         this.selected_view_option?.classList.add('iron-selected')
     },
-    
+
     setLiveViewers(e) {
         e.preventDefault();
 
         const val = prompt('Please set number of live viewers (comma is not required)', this.sidebar_datas.live_viewers);
-        
+
         if (val != null) {
             this.sidebar_datas.live_viewers = compute_live_viewers(val);
         }
     },
 });
-
 createApp({
     state,
     mounted() {
         state.hideDateSelector();
         state.selectDateRangeId(date_range_option.L7D);
         state.selectChartView(view_option.WATCH);
+
+        SpinChart1();
     },
     uploadChart1Datas(e) {
         e.preventDefault();
         alert(10);
     },
 }).mount();
+
+function SpinChart1() {
+    Highcharts.chart(chart_1_placeholder, {
+        chart: {
+            type: 'area',
+            backgroundColor: 'transparent',
+            height: 160,
+            spacingLeft: 20,
+            spacingRight: 20,
+            spacingBottom: 5,
+        },
+        credits: {
+            enabled: false,
+        },
+        title: false,
+        xAxis: {
+            type: 'datetime',
+            dateTimeLabelFormats: {
+                day: '%b %e, %Y'  // Format: "Jan 1, 2023"
+            },
+            labels: {
+                align: 'left',
+                y: 20,
+                style: { color: '#9e9e9e', fontSize: 13 },
+            },
+            padding: 30,
+            lineColor: '#9e9e9e',
+            tickWidth: 2,
+            tickLength: 4,
+            minPadding: 0,
+            maxPadding: 0,
+            startOnTick: true, 
+            endOnTick: false, 
+        },
+        yAxis: {
+            opposite: true,  // Places Y-axis on the right side
+            tickAmount: 4,
+            gridLineColor: '#323232',
+            gridLineWidth: 2,
+            title: false,
+            labels: {
+                format: '{value:.1f}',
+                style: { color: '#9e9e9e', fontSize: 12 },
+            },
+            formatter: (v) => {console.log (v); return v; }
+        },
+        legend: false,
+        series: [{
+            data: [
+                [Date.UTC(2023, 3, 1), 0.7],
+                [Date.UTC(2023, 3, 2), 0.8],
+                [Date.UTC(2023, 3, 3), 0.6],
+                [Date.UTC(2023, 3, 4), 0.6],
+                [Date.UTC(2023, 3, 5), 0.5],
+                [Date.UTC(2023, 3, 6), 0.3],
+            ],
+            color: '#41b4d9',
+            lineColor: '#41b4d9',
+            lineWidth: 2,
+            fillColor: 'rgba(65, 180, 217, 0.1)',
+        }],
+        tooltip: {
+            formatter: function () {
+                return Highcharts.dateFormat('%b %e, %Y', this.x) + '<br/>' +
+                    this.series.name + ': ' + this.y;
+            }
+        },
+        plotOptions: {
+            series: {
+                pointPlacement: 'on'
+            }
+        },
+    });
+}
