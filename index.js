@@ -288,17 +288,18 @@ function SpinChart1() {
                 day: '%b %e, %Y'  // Format: "Jan 1, 2023"
             },
             labels: {
-                align: 'left',
+                align: 'center',
                 y: 20,
+                overflow: 'justify',
             },
             padding: 30,
             lineColor: '#9e9e9e',
             tickWidth: 2,
-            tickLength: 4,
+            tickLength: 6,
             minPadding: 0,
             maxPadding: 0,
             startOnTick: true,
-            endOnTick: false,
+            endOnTick: true,
         },
         yAxis: {
             opposite: true,  // Places Y-axis on the right side
@@ -309,13 +310,17 @@ function SpinChart1() {
             labels: {
                 format: '{value:.1f}',
             },
-            formatter: (v) => { console.log(v); return v; }
         },
         legend: false,
         series: [{
             data: [
                 [Date.UTC(2023, 3, 1), 0.7],
                 [Date.UTC(2023, 3, 2), 0.8],
+                [Date.UTC(2023, 3, 3), 0.5],
+                [Date.UTC(2023, 3, 4), 0.6],
+                [Date.UTC(2023, 3, 5), 0.6],
+                [Date.UTC(2023, 3, 6), 0.5],
+                [Date.UTC(2023, 3, 7), 0.3],
             ],
             color: '#41b4d9',
             lineColor: '#41b4d9',

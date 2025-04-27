@@ -1,17 +1,15 @@
 /* AXIS labels */
 
-.highcharts-axis-labels text {
+.highcharts-root .highcharts-axis-labels text {
     fill: #9e9e9e !important; 
     font-size: 12px !important;
     font-weight: 400;
     font-family: "Roboto", "Noto", sans-serif;
 }
 
-.highcharts-axis-labels .highcharts-xaxis-labels text {
+.highcharts-root .highcharts-axis-labels.highcharts-xaxis-labels text:last-child {
     transform: translateX(-30px);
 }
-
-
 
 /* Tooltip */
 .highcharts-tooltip {
