@@ -224,6 +224,40 @@ createApp({
     },
 }).mount();
 
+// CHARTS
+const addVerticalLine = (chart, renderer) => {
+    const xAxis = chart.xAxis[0];
+    const verticalLine = renderer
+        .path([['M', 0, 10], ['L', 0, chart.plotHeight + 10]])
+        .attr({
+            class: 'chart-vertical-line',
+            fill: '#9e9e9e',
+        })
+        .add();
+
+    verticalLine.hide();
+
+    chart.container.addEventListener('pointermove', (event) => {
+        const nearest = chart.series?.[0]?.searchPoint?.(chart.pointer.normalize(event), true);
+        const idx = nearest?.key;
+
+        if (!!idx && idx >= xAxis.min && idx <= xAxis.max) {
+            const plotX = xAxis.toPixels(idx);
+
+            verticalLine.attr({
+                d: [['M', plotX, 10], ['L', plotX, chart.plotHeight + 10], ['L', plotX + 1, chart.plotHeight + 10], ['L', plotX + 1, 10], ['L', plotX, 10]],
+            });
+            verticalLine.show();
+        } else {
+            verticalLine.hide();
+        }
+    });
+
+    chart.container.addEventListener('mouseleave', () => {
+        verticalLine.hide();
+    });
+}
+
 function SpinChart1() {
     Highcharts.chart(chart_1_placeholder, {
         chart: {
@@ -233,6 +267,14 @@ function SpinChart1() {
             spacingLeft: 20,
             spacingRight: 20,
             spacingBottom: 5,
+            events: {
+                load(event) {
+                    const target = event.target;
+                    const renderer = target.renderer;
+
+                    addVerticalLine(target, renderer);
+                },
+            }
         },
         credits: {
             enabled: false,
@@ -292,6 +334,27 @@ function SpinChart1() {
         },
         plotOptions: {
             series: {
+                marker: {
+                    enabled: false,
+                    states: {
+                        hover: {
+                            enabled: true,
+                            radius: 5,
+                            lineColor: '#282828',
+                            lineWidth: 2,
+                        },
+                    },
+                },
+                states: {
+                    inactive: {
+                        opacity: 1
+                    },
+                    hover: {
+                        enabled: true,
+                        halo: { size: 4 },
+                        lineWidth: 2,
+                    },
+                },
                 pointPlacement: 'on'
             }
         },
