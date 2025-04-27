@@ -268,7 +268,7 @@ function SpinChart1() {
             height: 160,
             spacingLeft: 20,
             spacingRight: 20,
-            spacingBottom: 5,
+            spacingBottom: 8,
             events: {
                 load(event) {
                     const target = event.target;
@@ -290,7 +290,6 @@ function SpinChart1() {
             labels: {
                 align: 'left',
                 y: 20,
-                style: { color: '#9e9e9e', fontSize: 13 },
             },
             padding: 30,
             lineColor: '#9e9e9e',
@@ -298,8 +297,8 @@ function SpinChart1() {
             tickLength: 4,
             minPadding: 0,
             maxPadding: 0,
-            startOnTick: true, 
-            endOnTick: false, 
+            startOnTick: true,
+            endOnTick: false,
         },
         yAxis: {
             opposite: true,  // Places Y-axis on the right side
@@ -309,19 +308,14 @@ function SpinChart1() {
             title: false,
             labels: {
                 format: '{value:.1f}',
-                style: { color: '#9e9e9e', fontSize: 12 },
             },
-            formatter: (v) => {console.log (v); return v; }
+            formatter: (v) => { console.log(v); return v; }
         },
         legend: false,
         series: [{
             data: [
                 [Date.UTC(2023, 3, 1), 0.7],
                 [Date.UTC(2023, 3, 2), 0.8],
-                [Date.UTC(2023, 3, 3), 0.6],
-                [Date.UTC(2023, 3, 4), 0.6],
-                [Date.UTC(2023, 3, 5), 0.5],
-                [Date.UTC(2023, 3, 6), 0.3],
             ],
             color: '#41b4d9',
             lineColor: '#41b4d9',
@@ -329,9 +323,22 @@ function SpinChart1() {
             fillColor: 'rgba(65, 180, 217, 0.1)',
         }],
         tooltip: {
+            hideDelay: 0,
+            outside: true,
+            className: 'chart-tooltip',
+            backgroundColor: 'rgb(40, 40, 40)',
+            borderColor: 'rgb(61, 61, 61)',
+            borderWidth: 1,
+            borderRadius: 12,
+            padding: 18,
+            shape: 'none',
             formatter: function () {
-                return Highcharts.dateFormat('%b %e, %Y', this.x) + '<br/>' +
-                    this.series.name + ': ' + this.y;
+                return '<span class="tooltip-date">' + new Date(this.x).toLocaleDateString('en-US', {
+                    weekday: 'short',
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                }) + '</span><br/><br/><span class="tooltip-value">' + this.y + "</span>";
             }
         },
         plotOptions: {

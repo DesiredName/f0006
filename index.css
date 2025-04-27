@@ -1,0 +1,33 @@
+/* AXIS labels */
+
+.highcharts-axis-labels text {
+    fill: #9e9e9e !important; 
+    font-size: 12px !important;
+    font-weight: 400;
+    font-family: "Roboto", "Noto", sans-serif;
+}
+
+.highcharts-axis-labels .highcharts-xaxis-labels text {
+    transform: translateX(-30px);
+}
+
+
+
+/* Tooltip */
+.highcharts-tooltip {
+    padding: 10px 20px;
+}
+
+.highcharts-tooltip .tooltip-date {
+    font-size: 12px;
+    font-weight: 400;
+    font-family: "Roboto", "Noto", sans-serif;
+    fill: white;
+    stroke: none;
+}
+
+.highcharts-tooltip .tooltip-value {
+    font-size: 22px;
+    font-family: "Roboto", "Noto", sans-serif;
+    fill: rgba(65, 180, 217, 1) !important;
+}
