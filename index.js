@@ -233,20 +233,12 @@ function SpinChart1() {
 function SpinChart2() {
     Highcharts.chart(chart_2_placeholder, {
         chart: {
-            type: 'bar',
+            type: 'column',
             backgroundColor: 'transparent',
-            height: 60,
-            spacingLeft: 20,
-            spacingRight: 20,
-            spacingBottom: 8,
-            events: {
-                load(event) {
-                    const target = event.target;
-                    const renderer = target.renderer;
-
-                    addVerticalLine(target, renderer);
-                },
-            }
+            height: 80,
+            spacingLeft: 0,
+            spacingRight: 0,
+            spacingBottom: 22,
         },
         credits: {
             enabled: false,
@@ -254,17 +246,19 @@ function SpinChart2() {
         title: false,
         xAxis: {
             type: 'datetime',
-            dateTimeLabelFormats: {
-                day: '%b %e, %Y'  // Format: "Jan 1, 2023"
-            },
             labels: {
-                align: 'center',
+                formatter: function () {
+                    if (this.isFirst) return '-48h';
+                    if (this.isLast) return 'Now';
+                    return '';
+                },
                 y: 20,
-                overflow: 'justify',
             },
-            padding: 30,
+            tickPositioner: function () {
+                return [this.dataMin, this.dataMax];
+            },
             lineColor: '#9e9e9e',
-            tickWidth: 2,
+            tickWidth: 0,
             tickLength: 6,
             minPadding: 0,
             maxPadding: 0,
@@ -274,28 +268,50 @@ function SpinChart2() {
         yAxis: {
             opposite: true,  // Places Y-axis on the right side
             tickAmount: 4,
-            gridLineColor: '#323232',
-            gridLineWidth: 2,
+            gridLineColor: 'transparent',
             title: false,
             labels: {
-                format: '{value:.1f}',
+                enabled: false
             },
         },
         legend: false,
         series: [{
             data: [
-                [Date.UTC(2023, 3, 1), 0.7],
-                [Date.UTC(2023, 3, 2), 0.8],
-                [Date.UTC(2023, 3, 3), 0.5],
-                [Date.UTC(2023, 3, 4), 0.6],
-                [Date.UTC(2023, 3, 5), 0.6],
-                [Date.UTC(2023, 3, 6), 0.5],
-                [Date.UTC(2023, 3, 7), 0.3],
+                [Date.UTC(2023, 3, 1), 0],
+                [Date.UTC(2023, 3, 2), 0],
+                [Date.UTC(2023, 3, 3), 2],
+                [Date.UTC(2023, 3, 4), 2],
+                [Date.UTC(2023, 3, 5), 1],
+                [Date.UTC(2023, 3, 6), 1],
+                [Date.UTC(2023, 3, 7), 3],
+                [Date.UTC(2023, 3, 8), 0],
+                [Date.UTC(2023, 3, 9), 0],
+                [Date.UTC(2023, 3, 10), 0],
+                [Date.UTC(2023, 3, 11), 0],
+                [Date.UTC(2023, 3, 12), 0],
+                [Date.UTC(2023, 3, 13), 1],
+                [Date.UTC(2023, 3, 14), 1],
+                [Date.UTC(2023, 3, 15), 1],
+                [Date.UTC(2023, 3, 16), 0],
+                [Date.UTC(2023, 3, 17), 2],
+                [Date.UTC(2023, 3, 18), 0],
+                [Date.UTC(2023, 3, 19), 1],
+                [Date.UTC(2023, 3, 20), 1],
+                [Date.UTC(2023, 3, 21), 3],
+                [Date.UTC(2023, 3, 22), 0],
+                [Date.UTC(2023, 3, 23), 2],
+                [Date.UTC(2023, 3, 24), 0],
             ],
             color: '#41b4d9',
-            lineColor: '#41b4d9',
-            lineWidth: 2,
-            fillColor: 'rgba(65, 180, 217, 0.1)',
+            pointWidth: 4, 
+            grouping: false,
+            pointPadding: 0, 
+            borderWidth: 0,
+            states: {
+                hover: {
+                    color: 'rgba(65, 180, 217, 0.4)'
+                }
+            }
         }],
         tooltip: {
             hideDelay: 0,
@@ -314,32 +330,6 @@ function SpinChart2() {
                     day: 'numeric',
                     year: 'numeric'
                 }) + '</span><br/><br/><span class="tooltip-value">' + this.y + "</span>";
-            }
-        },
-        plotOptions: {
-            series: {
-                marker: {
-                    enabled: false,
-                    states: {
-                        hover: {
-                            enabled: true,
-                            radius: 5,
-                            lineColor: '#282828',
-                            lineWidth: 2,
-                        },
-                    },
-                },
-                states: {
-                    inactive: {
-                        opacity: 1
-                    },
-                    hover: {
-                        enabled: true,
-                        halo: { size: 4 },
-                        lineWidth: 2,
-                    },
-                },
-                pointPlacement: 'on'
             }
         },
     });

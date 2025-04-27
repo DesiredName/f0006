@@ -7,7 +7,7 @@
     font-family: "Roboto", "Noto", sans-serif;
 }
 
-.highcharts-root .highcharts-axis-labels.highcharts-xaxis-labels text:last-child {
+[data-id="chart-1-placeholder"] .highcharts-root .highcharts-axis-labels.highcharts-xaxis-labels text:last-child {
     transform: translateX(-30px);
 }
 
