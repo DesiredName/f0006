@@ -231,9 +231,9 @@ const addVerticalLine = (chart, renderer) => {
         .path([['M', 0, 10], ['L', 0, chart.plotHeight + 10]])
         .attr({
             class: 'chart-vertical-line',
-            fill: '#5e5e5e',
-            stroke: '#5e5e5e',
-            'stroke-width': 0.5,
+            fill: '#7e7e7e',
+            stroke: '#282828',
+            'stroke-width': 1,
         })
         .add();
 
@@ -247,7 +247,7 @@ const addVerticalLine = (chart, renderer) => {
             const plotX = xAxis.toPixels(idx);
 
             verticalLine.attr({
-                d: [['M', plotX, 10], ['L', plotX, chart.plotHeight + 10], ['L', plotX + 1, chart.plotHeight + 10], ['L', plotX + 1, 10], ['L', plotX, 10]],
+                d: [['M', plotX, 10], ['L', plotX, chart.plotHeight + 10], ['L', plotX + 2, chart.plotHeight + 10], ['L', plotX + 2, 10], ['L', plotX, 10]],
             });
             verticalLine.show();
         } else {
