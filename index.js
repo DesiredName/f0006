@@ -12,6 +12,8 @@ const date_range_selector_toggler_el = document.querySelector("[data-id='date_ra
 const date_range_selector_el = document.querySelector("[data-id='date_range_selector']");
 const chart_1_placeholder = document.querySelector("[data-id='chart-1-placeholder']");
 const chart_2_placeholder = document.querySelector("[data-id='chart-2-placeholder']");
+const upload_dialog = document.getElementById('uploadDialog');
+const upload_dialog_file = document.getElementById('fileInput');
 
 const view_option = Object.freeze({
     VIEWS: 'EXTERNAL_VIEWS-tab',
@@ -51,6 +53,8 @@ const state = reactive({
     sidebar_datas: {
         live_viewers: compute_live_viewers(1734)
     },
+
+    raw_datas: '',
 
     isDateSelectorVisible: false,
     selectedDateRange_DaysFormatted: compute_date_range_DaysFormatted(date_range_option.L7D),
@@ -98,6 +102,8 @@ const state = reactive({
         }
     },
 });
+
+
 createApp({
     state,
     mounted() {
@@ -110,9 +116,28 @@ createApp({
     },
     uploadChart1Datas(e) {
         e.preventDefault();
-        alert(10);
+        upload_dialog.showModal();
     },
-}).mount();
+}).mount('body');
+
+// File
+upload_dialog_file.addEventListener('change', (e) => {
+    upload_dialog.close();
+
+    const file = upload_dialog_file.files[0];
+
+    if (!file) {
+        alert('Please select a file first');
+        return;
+    }
+
+    Papa.parse(file, {
+        header: true,
+        complete: function(results) {
+            raw_datas = results.data;
+        }
+    });
+});
 
 // CHARTS
 function SpinChart1() {
@@ -304,9 +329,9 @@ function SpinChart2() {
                 [Date.UTC(2023, 3, 24), 0],
             ],
             color: '#41b4d9',
-            pointWidth: 4, 
+            pointWidth: 4,
             grouping: false,
-            pointPadding: 0, 
+            pointPadding: 0,
             borderWidth: 0,
             states: {
                 hover: {
