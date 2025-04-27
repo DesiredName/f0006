@@ -236,9 +236,10 @@ function SpinChart2() {
             type: 'column',
             backgroundColor: 'transparent',
             height: 80,
+            spacingTop: 0,
             spacingLeft: 0,
-            spacingRight: 0,
             spacingBottom: 22,
+            spacingRight: 0,
         },
         credits: {
             enabled: false,
