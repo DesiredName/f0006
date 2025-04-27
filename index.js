@@ -231,7 +231,9 @@ const addVerticalLine = (chart, renderer) => {
         .path([['M', 0, 10], ['L', 0, chart.plotHeight + 10]])
         .attr({
             class: 'chart-vertical-line',
-            fill: '#9e9e9e',
+            fill: '#5e5e5e',
+            stroke: '#5e5e5e',
+            'stroke-width': 0.5,
         })
         .add();
 
