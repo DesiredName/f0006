@@ -4,8 +4,11 @@ import {
     date_range,
     date_range_option,
     compute_date_range_DaysFormatted,
-    compute_live_viewers
+    compute_live_viewers,
+    data_target
 } from './utils.js';
+import ComposeData from './composer.js';
+import { samples_48h } from './samples.js';
 
 // elements
 const date_range_selector_toggler_el = document.querySelector("[data-id='date_range_selector_toggler']")
@@ -54,11 +57,11 @@ const state = reactive({
         live_viewers: compute_live_viewers(1734)
     },
 
-    raw_datas: '',
+    chart48h: null,
 
     isDateSelectorVisible: false,
     selectedDateRange_DaysFormatted: compute_date_range_DaysFormatted(date_range_option.L7D),
-    selectedDateRangeOption: date_range[date_range_option.L7D],
+    selectedDateRange_Title: date_range[date_range_option.L7D],
 
     toggleDateSelector() {
         this.isDateSelectorVisible = !this.isDateSelectorVisible;
@@ -82,7 +85,8 @@ const state = reactive({
 
     selectDateRangeId(option) {
         this.hideDateSelector();
-        this.selectedDateRangeOption = date_range[option];
+        this.selectedDateRangeOption = option;
+        this.selectedDateRange_Title = date_range[option];
         this.selectedDateRange_DaysFormatted = compute_date_range_DaysFormatted(option)
     },
 
@@ -111,11 +115,17 @@ createApp({
         state.selectDateRangeId(date_range_option.L7D);
         state.selectChartView(view_option.WATCH);
 
-        SpinChart1();
-        SpinChart2();
+        SpinChartMain();
+        SpinChart48H();
     },
-    uploadChart1Datas(e) {
+    uploadChartMainDatas(e) {
         e.preventDefault();
+        upload_dialog.dataset.target = data_target.ChartMain;
+        upload_dialog.showModal();
+    },
+    uploadChart48HDatas(e) {
+        e.preventDefault();
+        upload_dialog.dataset.target = data_target.Chart48H;
         upload_dialog.showModal();
     },
 }).mount('body');
@@ -124,7 +134,13 @@ createApp({
 upload_dialog_file.addEventListener('change', (e) => {
     upload_dialog.close();
 
+    const target = upload_dialog.dataset.target;
     const file = upload_dialog_file.files[0];
+
+    if (!target) {
+        alert('Please select a data target');
+        return;
+    }
 
     if (!file) {
         alert('Please select a file first');
@@ -134,13 +150,16 @@ upload_dialog_file.addEventListener('change', (e) => {
     Papa.parse(file, {
         header: true,
         complete: function(results) {
-            raw_datas = results.data;
+            console.log(results);
+            state.chart48h.update({
+                series: { data: ComposeData(target, results, state.selectedDateRangeOption) }
+            });
         }
     });
 });
 
 // CHARTS
-function SpinChart1() {
+function SpinChartMain() {
     Highcharts.chart(chart_1_placeholder, {
         chart: {
             type: 'area',
@@ -255,8 +274,8 @@ function SpinChart1() {
     });
 }
 
-function SpinChart2() {
-    Highcharts.chart(chart_2_placeholder, {
+function SpinChart48H() {
+    state.chart48h = Highcharts.chart(chart_2_placeholder, {
         chart: {
             type: 'column',
             backgroundColor: 'transparent',
@@ -302,32 +321,7 @@ function SpinChart2() {
         },
         legend: false,
         series: [{
-            data: [
-                [Date.UTC(2023, 3, 1), 0],
-                [Date.UTC(2023, 3, 2), 0],
-                [Date.UTC(2023, 3, 3), 2],
-                [Date.UTC(2023, 3, 4), 2],
-                [Date.UTC(2023, 3, 5), 1],
-                [Date.UTC(2023, 3, 6), 1],
-                [Date.UTC(2023, 3, 7), 3],
-                [Date.UTC(2023, 3, 8), 0],
-                [Date.UTC(2023, 3, 9), 0],
-                [Date.UTC(2023, 3, 10), 0],
-                [Date.UTC(2023, 3, 11), 0],
-                [Date.UTC(2023, 3, 12), 0],
-                [Date.UTC(2023, 3, 13), 1],
-                [Date.UTC(2023, 3, 14), 1],
-                [Date.UTC(2023, 3, 15), 1],
-                [Date.UTC(2023, 3, 16), 0],
-                [Date.UTC(2023, 3, 17), 2],
-                [Date.UTC(2023, 3, 18), 0],
-                [Date.UTC(2023, 3, 19), 1],
-                [Date.UTC(2023, 3, 20), 1],
-                [Date.UTC(2023, 3, 21), 3],
-                [Date.UTC(2023, 3, 22), 0],
-                [Date.UTC(2023, 3, 23), 2],
-                [Date.UTC(2023, 3, 24), 0],
-            ],
+            data: ComposeData(data_target.Chart48H, samples_48h, state.selectedDateRangeOption),
             color: '#41b4d9',
             pointWidth: 4,
             grouping: false,
@@ -350,12 +344,7 @@ function SpinChart2() {
             padding: 18,
             shape: 'none',
             formatter: function () {
-                return '<span class="tooltip-date">' + new Date(this.x).toLocaleDateString('en-US', {
-                    weekday: 'short',
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric'
-                }) + '</span><br/><br/><span class="tooltip-value">' + this.y + "</span>";
+                return '<span class="tooltip-date">' + this.custom?.title + '</span><br/><br/><span class="tooltip-value">' + this.y + "</span>";
             }
         },
     });

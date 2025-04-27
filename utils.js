@@ -19,6 +19,11 @@ export const date_range = Object.freeze({
     [date_range_option.Y2024]: '2024',
 });
 
+export const data_target = Object.freeze({
+    ChartMain: 'target-chart-1',
+    Chart48H: 'target-chart-2',
+});
+
 export const compute_date_range_DaysFormatted = (option) => {
     const day = 24 * 60 * 60 * 1000;
     const now = Date.now() - day;

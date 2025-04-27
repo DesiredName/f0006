@@ -1,21 +1,47 @@
 import fs from 'node:fs';
 
-const data = [];
-const today = new Date().getTime();
+// main datas
+let data = [];
+let delta = 24 * 60 * 60 * 1000;
+let today = new Date();
+today.setHours(0);
+today.setMinutes(0);
+today.setSeconds(0);
+today.setMilliseconds(0);
+today = today.getTime();
 
-const randomDays = () => (Math.floor(Math.random() * 365 * 3) * 24 * 3600000);
-const randomMills = () => (Math.floor(Math.random() * 3600000));
+for (let day = 800; day >= -1; day--) {
+    const timestamp = new Date(today - delta * day);
+    const views = Math.round(Math.random() * 10);
+    const watch = (Math.random() * views).toFixed(2);
+    const subscribers = Math.round(Math.random() * watch);
+    const revenue = (Math.random() * subscribers).toFixed(2);
 
-for(let i = 0; i < 10000; i++) {
-    const timestamp = new Date(today - randomDays() - randomMills());
-    const sessions = Math.round(Math.random() * 200);
-    const orders = Math.round(Math.random() * sessions);
-    const totalSales = Math.round(Math.random() * orders);
-
-    data.push([timestamp, sessions, orders, totalSales]);
+    data.push([timestamp, views, watch, subscribers, revenue]);
 }
 
-const samples = data.toSorted((a, b) => a[0] > b[0] ? 1 : -1).map(([timestamp, ...a]) => [timestamp.toISOString(), ...a].join(',')).join('\n');
-const output = 'timestamp,sessions,orders,totalSales\n'.concat(samples);
+let samples = data.toSorted((a, b) => a[0] > b[0] ? 1 : -1).map(([timestamp, ...a]) => [timestamp.toISOString(), ...a].join(',')).join('\n');
+let output = 'timestamp,views,watch,subscribers,revenue\n'.concat(samples);
 
-fs.writeFileSync('./public/sample.csv', output);
+fs.writeFileSync('./public/main.csv', output);
+
+// views 48h
+data = [];
+delta = 60 * 60 * 1000;
+today = new Date();
+today.setMinutes(0);
+today.setSeconds(0);
+today.setMilliseconds(0);
+today = today.getTime();
+
+for (let hour = 49; hour >= 0; hour--) {
+    const timestamp = new Date(today - delta * hour);
+    const views = Math.round(Math.random() * 3);
+
+    data.push([timestamp, views]);
+}
+
+samples = data.toSorted((a, b) => a[0] > b[0] ? 1 : -1).map(([timestamp, ...a]) => [timestamp.toISOString(), ...a].join(',')).join('\n');
+output = 'timestamp,views\n'.concat(samples);
+
+fs.writeFileSync('./public/views.csv', output);
