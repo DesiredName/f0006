@@ -9,6 +9,13 @@ export const date_range_option = Object.freeze({
     LASTY: 'LASTY',
 });
 
+export const view_option = Object.freeze({
+    VIEWS: 'EXTERNAL_VIEWS-tab',
+    WATCH: 'EXTERNAL_WATCH_TIME-tab',
+    SUBS: 'SUBSCRIBERS_NET_CHANGE-tab',
+    REV: 'TOTAL_ESTIMATED_EARNINGS-tab',
+});
+
 const today = new Date();
 export const date_range = Object.freeze({
     [date_range_option.L7D]: 'Last 7 days',
@@ -24,6 +31,92 @@ export const chart_datas_target = Object.freeze({
     ChartMain: 'target-chart-1',
     Chart48H: 'target-chart-2',
 });
+// -------------------------------------------------------------------------
+
+// VALES
+export class DateRange {
+    constructor(curr_from, curr_till, prev_from, prev_till) {
+        this.curr_from = curr_from;
+        this.curr_from.setUTCHours(0, 0, 0, 0);
+        this.curr_till = curr_till;
+        this.curr_till.setUTCHours(23, 59, 59, 999);
+        this.prev_from = prev_from;
+        this.prev_from.setUTCHours(0, 0, 0, 0);
+        this.prev_till= prev_till;
+        this.prev_till.setUTCHours(23, 59, 59, 999);
+    }
+}
+
+export const compute_DateRange = (option) => {
+    const day = 24 * 60 * 60 * 1000;
+
+    const curr = new Date(Date.now() - day);
+    curr.setUTCHours(0, 0, 0, 0);
+    const now = curr.getTime();
+
+    switch (option) {
+        case date_range_option.L28D:
+            return new DateRange(
+                new Date(now - 27 * day),
+                curr,
+                new Date(now - (27 * 2 + 1) * day),
+                new Date(now - (27 + 1) * day),
+            )
+
+        case date_range_option.L90D:
+            return new DateRange(
+                new Date(now - 89 * day),
+                curr,
+                new Date(now - (89 * 2 + 1) * day),
+                new Date(now - (89 + 1) * day),
+            )
+
+        case date_range_option.L365D:
+            return new DateRange(
+                new Date(now - 364 * day),
+                curr,
+                new Date(now - (364 * 2 + 1) * day),
+                new Date(now - (364 + 1) * day),
+            )
+
+        case date_range_option.LIFE:
+            return new DateRange(
+                new Date(2023, 3, 19, 0, 0, 0, 0), // 19 Apr 2023
+                curr,
+                null,
+                null,
+            )
+
+        case date_range_option.THISY:
+            const number_of_days_since_this_year = Math.floor(
+                curr.getTime() - new Date(curr.getFullYear(), 0, 1).getTime()
+            );
+
+            return new DateRange(
+                new Date(curr.getFullYear(), 0, 1),
+                curr,
+                new Date(new Date(curr.getFullYear(), 0, 0).getTime() - number_of_days_since_this_year),
+                new Date(curr.getFullYear(), 0, 0),
+            )
+
+        case date_range_option.LASTY:
+            return new DateRange(
+                new Date(curr.getFullYear() - 1, 0, 1),
+                new Date(curr.getFullYear(), 0, 0),
+                new Date(curr.getFullYear() - 2, 0, 0),
+                new Date(curr.getFullYear() - 1, 0, 0),
+            )
+
+        default:
+        case date_range_option.L7D:
+            return new DateRange(
+                new Date(now - 6 * day),
+                curr,
+                new Date(now - (6 * 2 + 1) * day),
+                new Date(now - (6 + 1) * day),
+            )
+    }
+}
 // -------------------------------------------------------------------------
 
 // FORMATTERS
