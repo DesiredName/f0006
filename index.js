@@ -33,24 +33,24 @@ const state = reactive({
     selected_view_option: null,
     view_options_datas: {
         [view_option.VIEWS]: {
-            figure: 117,
+            figure: '112',
             icon: null,
-            text: '8% less than previous 7 days'
+            details: '8% less than previous 7 days'
         },
         [view_option.WATCH]: {
-            figure: 4.1,
+            figure: '4.1',
             icon: 'up',
-            text: '14% more than previous 7 days'
+            details: '14% more than previous 7 days'
         },
         [view_option.SUBS]: {
-            figure: 4,
-            icon: 'up',
-            text: '200% more than previous 7 days'
+            figure: '-4',
+            icon: 'down',
+            details: '200% more than previous 7 days'
         },
         [view_option.REV]: {
-            figure: 4,
+            figure: '$0.12',
             icon: 'up',
-            text: '200% more than previous 7 days'
+            details: '32% more than previous 7 days'
         }
     },
     sidebar_datas: {
@@ -107,13 +107,18 @@ const state = reactive({
     },
 });
 
+function TrendIcon(props) {
+    return {
+        
+    }
+} 
 
 createApp({
     state,
     mounted() {
         state.hideDateSelector();
         state.selectDateRangeId(date_range_option.L7D);
-        state.selectChartView(view_option.WATCH);
+        state.selectChartView(view_option.VIEWS);
 
         SpinChartMain();
         SpinChart48H();
