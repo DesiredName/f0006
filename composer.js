@@ -1,17 +1,21 @@
-import { data_target } from "./utils.js"
+import { chart_datas_target } from "./utils.js"
 
-export default function ComposeData(target, { data }, date_range_option) {
-    if (target === data_target.ChartMain) {
-        return ComposeDataForChartMain(data, date_range_option);
-    } else if (target === data_target.Chart48H) {
+export default function ComposeData(target, { data }, date_range_option, view_option) {
+    if (target === chart_datas_target.ChartMain) {
+        return ComposeDataForChartMain(data, date_range_option, view_option);
+    } else if (target === chart_datas_target.Chart48H) {
         return ComposeDataForChart48H(data);
     } else {
         alert('Target unknown');
     }
 }
 
-function ComposeDataForChartMain(data, date_range_option) {
+function ComposeDataForChartMain(datas, date_range_option, view_option) {
+    console.log(datas)
     console.log(date_range_option)
+    console.log(view_option)
+
+    return [];
 }
 
 function ComposeDataForChart48H(datas) {

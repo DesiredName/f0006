@@ -1,30 +1,33 @@
-// SUPPORT
+// ENUMS
 export const date_range_option = Object.freeze({
     L7D: 'l7d',
     L28D: 'l28d',
     L90D: 'l90d',
-    LY: 'ly',
+    L365D: 'l365d',
     LIFE: 'Lifetime',
     THISY: 'THISY',
     LASTY: 'LASTY',
 });
 
+const today = new Date();
 export const date_range = Object.freeze({
     [date_range_option.L7D]: 'Last 7 days',
     [date_range_option.L28D]: 'Last 28 days',
     [date_range_option.L90D]: 'Last 90 days',
-    [date_range_option.LY]: 'Last 365 days',
+    [date_range_option.L365D]: 'Last 365 days',
     [date_range_option.LIFE]: 'Lifetime',
-    [date_range_option.THISY]: new Date().getFullYear(),
-    [date_range_option.LASTY]: new Date().getFullYear() - 1,
+    [date_range_option.THISY]: today.getFullYear(),
+    [date_range_option.LASTY]: today.getFullYear() - 1,
 });
 
-export const data_target = Object.freeze({
+export const chart_datas_target = Object.freeze({
     ChartMain: 'target-chart-1',
     Chart48H: 'target-chart-2',
 });
+// -------------------------------------------------------------------------
 
-export const compute_date_range_DaysFormatted = (option) => {
+// FORMATTERS
+export const compute_DateRange_DaysFormatted = (option) => {
     const day = 24 * 60 * 60 * 1000;
     const now = Date.now() - day;
 
@@ -40,7 +43,7 @@ export const compute_date_range_DaysFormatted = (option) => {
             prev = new Date(now - 89 * day);
             break;
 
-        case date_range_option.LY:
+        case date_range_option.L365D:
             prev = new Date(now - 364 * day);
             break;
 
@@ -116,13 +119,14 @@ export const compute_date_range_DaysFormatted = (option) => {
     }
 }
 
-export const compute_live_viewers = (num) => {
+export const compute_LiveViewers_NumberFormatted = (num) => {
     const f = new Intl.NumberFormat('en', {
         style: 'decimal',
     });
 
     return f.format(num);
 }
+// -------------------------------------------------------------------------
 
 
 // CHARTS
@@ -160,3 +164,4 @@ export const addVerticalLine = (chart, renderer) => {
         verticalLine.hide();
     });
 }
+// -------------------------------------------------------------------------

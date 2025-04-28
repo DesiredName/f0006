@@ -3,12 +3,12 @@ import {
     addVerticalLine,
     date_range,
     date_range_option,
-    compute_date_range_DaysFormatted,
-    compute_live_viewers,
-    data_target
+    compute_DateRange_DaysFormatted,
+    compute_LiveViewers_NumberFormatted,
+    chart_datas_target
 } from './utils.js';
 import ComposeData from './composer.js';
-import { samples_48h } from './samples.js';
+import { samples_48h, samples_main } from './samples.js';
 import TrendIcon from './TrendIcon.js';
 
 // elements
@@ -29,40 +29,73 @@ const view_option = Object.freeze({
 const state = reactive({
     date_range_option,
     date_range,
-
     view_option,
+
+    // 
+    selected_date_range_option: null,
     selected_view_option: null,
+    selected_view_option_el: null,
+    
+    //
     view_options_datas: {
         [view_option.VIEWS]: {
             figure: '112',
             trend: null,
-            details: '8% less than previous 7 days'
+            details: '8% less than previous 7 days',
+            data: [
+                [Date.UTC(2023, 3, 1), 0.7],
+                [Date.UTC(2023, 3, 2), 0.8],
+                [Date.UTC(2023, 3, 7), 0.3],
+            ],
         },
         [view_option.WATCH]: {
             figure: '4.1',
             trend: 'up',
-            details: '14% more than previous 7 days'
+            details: '14% more than previous 7 days',
+            data: [
+                [Date.UTC(2023, 3, 1), 0.7],
+                [Date.UTC(2023, 3, 2), 0.8],
+                [Date.UTC(2023, 3, 3), 0.5],
+                [Date.UTC(2023, 3, 6), 0.5],
+                [Date.UTC(2023, 3, 7), 0.3],
+            ],
         },
         [view_option.SUBS]: {
             figure: '-4',
             trend: 'down',
-            details: '200% more than previous 7 days'
+            details: '200% more than previous 7 days',
+            data: [
+                [Date.UTC(2023, 3, 3), 0.5],
+                [Date.UTC(2023, 3, 4), 0.6],
+                [Date.UTC(2023, 3, 5), 0.6],
+                [Date.UTC(2023, 3, 6), 0.5],
+                [Date.UTC(2023, 3, 7), 0.3],
+            ],
         },
         [view_option.REV]: {
             figure: '$0.12',
             trend: 'up',
-            details: '32% more than previous 7 days'
+            details: '32% more than previous 7 days',
+            data: [
+                [Date.UTC(2023, 3, 1), 0.7],
+                [Date.UTC(2023, 3, 2), 0.8],
+                [Date.UTC(2023, 3, 6), 0.5],
+                [Date.UTC(2023, 3, 7), 0.3],
+            ],
         }
     },
     sidebar_datas: {
-        live_viewers: compute_live_viewers(1734)
+        live_viewers: compute_LiveViewers_NumberFormatted(1734)
+    },
+    main_title_datas: {
+        title_html: 'Your channel got 97&nbsp;views in the last 7&nbsp;days'
     },
 
     chartMain: null,
     chart48h: null,
 
     isDateSelectorVisible: false,
-    selectedDateRange_DaysFormatted: compute_date_range_DaysFormatted(date_range_option.L7D),
+    selectedDateRange_DaysFormatted: compute_DateRange_DaysFormatted(date_range_option.L7D),
     selectedDateRange_Title: date_range[date_range_option.L7D],
 
     toggleDateSelector() {
@@ -87,15 +120,22 @@ const state = reactive({
 
     selectDateRangeId(option) {
         this.hideDateSelector();
-        this.selectedDateRangeOption = option;
+        
+        this.selected_date_range_option = option;
+
         this.selectedDateRange_Title = date_range[option];
-        this.selectedDateRange_DaysFormatted = compute_date_range_DaysFormatted(option)
+        this.selectedDateRange_DaysFormatted = compute_DateRange_DaysFormatted(option)
     },
 
     selectChartView(option) {
-        this.selected_view_option?.classList.remove('iron-selected')
-        this.selected_view_option = document.getElementById(option);
-        this.selected_view_option?.classList.add('iron-selected')
+        this.selected_view_option_el?.classList.remove('iron-selected');
+        this.selected_view_option_el = document.getElementById(option);
+        this.selected_view_option_el?.classList.add('iron-selected');
+
+        this.selected_view_option = option;
+        this.chartMain.update({
+            series: { data: this.view_options_datas[option].data }
+        });
     },
 
     setLiveViewers(e) {
@@ -104,7 +144,7 @@ const state = reactive({
         const val = prompt('Please set number of live viewers (comma is not required)', this.sidebar_datas.live_viewers);
 
         if (val != null) {
-            this.sidebar_datas.live_viewers = compute_live_viewers(val);
+            this.sidebar_datas.live_viewers = compute_LiveViewers_NumberFormatted(val);
         }
     },
 });
@@ -117,20 +157,21 @@ createApp({
     // core
     mounted() {
         state.hideDateSelector();
-        state.selectDateRangeId(date_range_option.L7D);
-        state.selectChartView(view_option.VIEWS);
 
         SpinChartMain();
         SpinChart48H();
+
+        state.selectDateRangeId(date_range_option.L7D);
+        state.selectChartView(view_option.VIEWS);
     },
     uploadChartMainDatas(e) {
         e.preventDefault();
-        upload_dialog.dataset.target = data_target.ChartMain;
+        upload_dialog.dataset.target = chart_datas_target.ChartMain;
         upload_dialog.showModal();
     },
     uploadChart48HDatas(e) {
         e.preventDefault();
-        upload_dialog.dataset.target = data_target.Chart48H;
+        upload_dialog.dataset.target = chart_datas_target.Chart48H;
         upload_dialog.showModal();
     },
 }).mount('body');
@@ -155,9 +196,15 @@ upload_dialog_file.addEventListener('change', (e) => {
     Papa.parse(file, {
         header: true,
         complete: function(results) {
-            if (target === data_target.Chart48H) {
+            if (target === chart_datas_target.Chart48H) {
                 state.chart48h.update({
-                    series: { data: ComposeData(target, results, state.selectedDateRangeOption) }
+                    series: { data: ComposeData(target, results) }
+                });
+            }
+            
+            if (target === chart_datas_target.ChartMain) {
+                state.chartMain.update({
+                    series: { data: ComposeData(target, results, state.selected_date_range_option, state.selected_view_option) }
                 });
             }
         }
@@ -225,7 +272,7 @@ function SpinChartMain() {
                 [Date.UTC(2023, 3, 4), 0.6],
                 [Date.UTC(2023, 3, 5), 0.6],
                 [Date.UTC(2023, 3, 6), 0.5],
-                [Date.UTC(2023, 3, 7), 0.3],
+                [Date.UTC(2023, 3, 7), 0.3]
             ],
             color: '#41b4d9',
             lineColor: '#41b4d9',
@@ -327,7 +374,7 @@ function SpinChart48H() {
         },
         legend: false,
         series: [{
-            data: ComposeData(data_target.Chart48H, samples_48h, state.selectedDateRangeOption),
+            data: ComposeData(chart_datas_target.Chart48H, samples_48h),
             color: '#41b4d9',
             pointWidth: 4,
             grouping: false,
