@@ -150,10 +150,11 @@ upload_dialog_file.addEventListener('change', (e) => {
     Papa.parse(file, {
         header: true,
         complete: function(results) {
-            console.log(results);
-            state.chart48h.update({
-                series: { data: ComposeData(target, results, state.selectedDateRangeOption) }
-            });
+            if (target === data_target.Chart48H) {
+                state.chart48h.update({
+                    series: { data: ComposeData(target, results, state.selectedDateRangeOption) }
+                });
+            }
         }
     });
 });

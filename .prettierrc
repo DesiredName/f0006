@@ -1,0 +1,6 @@
+{
+    "printWidth": 500,
+    "singleAttributePerLine": false,
+    "htmlWhitespaceSensitivity": "css",
+    "bracketSameLine": true
+}
