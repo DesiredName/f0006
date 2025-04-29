@@ -6,7 +6,7 @@ export const date_range_option = Object.freeze({
     L365D: 'l365d',
     LIFE: 'Lifetime',
     THISY: 'THISY',
-    LASTY: 'LASTY',
+    PREVY: 'PREVY',
 });
 
 export const view_option = Object.freeze({
@@ -35,8 +35,9 @@ export const chart_datas_target = Object.freeze({
 
 // VALES
 export class DateRange {
-    constructor(name, curr_from, curr_till, prev_from, prev_till) {
-        this.name = name;
+    constructor(range_title, range_name, curr_from, curr_till, prev_from, prev_till) {
+        this.range_title = range_title;
+        this.range_name = range_name;
         this.curr_from = curr_from;
         this.curr_from.setUTCHours(0, 0, 0, 0);
         this.curr_till = curr_till;
@@ -59,6 +60,7 @@ export const compute_DateRange = (option) => {
         case date_range_option.L28D:
             return new DateRange(
                 'last 28 days',
+                'last 28 days',
                 new Date(now - 27 * day),
                 curr,
                 new Date(now - (27 * 2 + 1) * day),
@@ -67,6 +69,7 @@ export const compute_DateRange = (option) => {
 
         case date_range_option.L90D:
             return new DateRange(
+                'last 90 days',
                 'last 90 days',
                 new Date(now - 89 * day),
                 curr,
@@ -77,6 +80,7 @@ export const compute_DateRange = (option) => {
         case date_range_option.L365D:
             return new DateRange(
                 'last 365 days',
+                'last 365 days',
                 new Date(now - 364 * day),
                 curr,
                 new Date(now - (364 * 2 + 1) * day),
@@ -85,6 +89,7 @@ export const compute_DateRange = (option) => {
 
         case date_range_option.LIFE:
             return new DateRange(
+                null,
                 null,
                 new Date(2023, 3, 19, 0, 0, 0, 0), // 19 Apr 2023
                 curr,
@@ -110,6 +115,7 @@ export const compute_DateRange = (option) => {
             });
 
             return new DateRange(
+                curr.getFullYear(),
                 f1.format(prev_from) + ' - ' + f2.format(prev_till),
                 new Date(curr.getFullYear(), 0, 1),
                 curr,
@@ -134,6 +140,7 @@ export const compute_DateRange = (option) => {
             });
 
             return new DateRange(
+                curr.getFullYear(),
                 f1.format(prev_from) + ' - ' + f2.format(prev_till),
                 new Date(curr.getFullYear() - 1, 0, 1),
                 new Date(curr.getFullYear(), 0, 0),
@@ -145,6 +152,7 @@ export const compute_DateRange = (option) => {
         default:
         case date_range_option.L7D:
             return new DateRange(
+                'last 7 days',
                 'last 7 days',
                 new Date(now - 6 * day),
                 curr,

@@ -54,7 +54,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
 
         return noPreviousRange
             ? `Your channel has gotten ${f.format(t)} views so far`
-            : `Your channel got ${f.format(t)} views in the ${range.name}`;
+            : `Your channel got ${f.format(t)} views in the ${range.range_title}`;
     })(main_datas.reduce((acc, entry) => acc + entry.views, 0));
 
     return {
@@ -67,7 +67,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
                 ? 'almost the same as '
                 : trend === 'up'
                     ? percent + ' more than '
-                    : percent + ' less than ') + range.name);
+                    : percent + ' less than ') + range.range_name);
 
             const f = new Intl.NumberFormat('en', {
                 notation: 'compact',
@@ -99,7 +99,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
                 ? 'almost the same as '
                 : trend === 'up'
                     ? percent + ' more than '
-                    : percent + ' less than ') + range.name);
+                    : percent + ' less than ') + range.range_name);
 
             return {
                 figure: figure.toFixed(2),
@@ -126,7 +126,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
                 ? 'almost the same as '
                 : trend === 'up'
                     ? percent + ' more than '
-                    : percent + ' less than ') + range.name);
+                    : percent + ' less than ') + range.range_name);
 
             const f = new Intl.NumberFormat('en', {
                 notation: 'compact',
@@ -158,7 +158,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
                 ? 'almost the same as '
                 : trend === 'up'
                     ? percent + ' more than '
-                    : percent + ' less than ') + range.name);
+                    : percent + ' less than ') + range.range_name);
 
             const f = new Intl.NumberFormat('en', {
                 style: 'currency',
