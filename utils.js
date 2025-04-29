@@ -145,6 +145,8 @@ export const compute_DateRange = (option) => {
         };
 
         case date_range_option.PREVY: {
+            const curr_from = new Date(curr.getFullYear() - 1, 0, 1);
+            const curr_till = new Date(curr.getFullYear(), 0, 0);
             const prev_from = new Date(curr.getFullYear() - 2, 0, 0);
             const prev_till = new Date(curr.getFullYear() - 1, 0, 0);
 
@@ -160,10 +162,10 @@ export const compute_DateRange = (option) => {
             });
 
             result = new DateRange(
-                (v) => `Your channel got ${v} views in ${curr.getFullYear()}`,
+                (v) => `Your channel got ${v} views in ${curr_from.getFullYear()}`,
                 f1.format(prev_from) + ' - ' + f2.format(prev_till),
-                new Date(curr.getFullYear() - 1, 0, 1),
-                new Date(curr.getFullYear(), 0, 0),
+                curr_from,
+                curr_till,
                 prev_from,
                 prev_till,
             );
