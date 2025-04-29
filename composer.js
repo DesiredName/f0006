@@ -41,10 +41,10 @@ export function ComposeDataForChart48H(datas) {
 export function ComposeDataForChartMain(datas, selected_date_range_option, selected_view_option) {
     const range = compute_DateRange(selected_date_range_option);
     const noPreviousRange = selected_date_range_option === date_range_option.LIFE; 
-    const main_datas = datas.filter(({ timestamp }) => (timestamp >= range.curr_from) && (timestamp <= range.curr_till));
+    const main_datas = datas.filter(({ timestamp }) => (timestamp > range.curr_from) && (timestamp <= range.curr_till));
     const compared_datas = noPreviousRange
         ? null
-        : datas.filter(({ timestamp }) => (timestamp >= range.prev_from) && (timestamp <= range.prev_till));
+        : datas.filter(({ timestamp }) => (timestamp > range.prev_from) && (timestamp <= range.prev_till));
     
     const compute_trend = (figure, prev_figure) => noPreviousRange ? null : figure > prev_figure ? 'up' : figure < prev_figure ? 'down' : null;
     const main_title = ((t) => {
@@ -52,9 +52,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
             style: 'decimal'
         });
 
-        return noPreviousRange
-            ? `Your channel has gotten ${f.format(t)} views so far`
-            : `Your channel got ${f.format(t)} views in the ${range.range_title}`;
+        return range.range_title(f.format(t));
     })(main_datas.reduce((acc, entry) => acc + entry.views, 0));
 
     return {
@@ -63,9 +61,9 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
         [view_option.VIEWS]: ((compute_data, prop_name, figure, prev_figure) => {
             const trend = compute_trend(figure, prev_figure);
             const percent = noPreviousRange ? 0 : compute_PercentFormatted((figure - prev_figure) / prev_figure);
-            const details = noPreviousRange ? '' : ((trend == null
-                ? 'almost the same as '
-                : trend === 'up'
+            const details = (noPreviousRange || trend == null)
+                ? ''
+                : ((trend === 'up'
                     ? percent + ' more than '
                     : percent + ' less than ') + range.range_name);
 
@@ -75,7 +73,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
             });
 
             return {
-                figure: f.format(figure),
+                figure: figure === 0 ? '-' : f.format(figure),
                 trend,
                 details,
                 yAxisFormatter: function () { return f.format(this.value); },
@@ -95,14 +93,14 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
         [view_option.WATCH]: ((compute_data, prop_name, figure, prev_figure) => {
             const trend = compute_trend(figure, prev_figure);
             const percent = noPreviousRange ? 0 : compute_PercentFormatted((figure - prev_figure) / prev_figure);
-            const details = noPreviousRange ? '' : ((trend == null
-                ? 'almost the same as '
-                : trend === 'up'
+            const details = (noPreviousRange || trend == null)
+                ? ''
+                : ((trend === 'up'
                     ? percent + ' more than '
                     : percent + ' less than ') + range.range_name);
 
             return {
-                figure: figure.toFixed(2),
+                figure: figure === 0 ? '-' : figure.toFixed(2),
                 trend,
                 details,
                 yAxisFormatter: undefined,
@@ -122,19 +120,20 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
         [view_option.SUBS]: ((compute_data, prop_name, figure, prev_figure) => {
             const trend = compute_trend(figure, prev_figure);
             const percent = noPreviousRange ? 0 : compute_PercentFormatted((figure - prev_figure) / prev_figure);
-            const details = noPreviousRange ? '' : ((trend == null
-                ? 'almost the same as '
-                : trend === 'up'
+            const details = (noPreviousRange || trend == null)
+                ? ''
+                : ((trend === 'up'
                     ? percent + ' more than '
                     : percent + ' less than ') + range.range_name);
 
             const f = new Intl.NumberFormat('en', {
                 notation: 'compact',
                 compactDisplay: 'short',
+                signDisplay: 'always'
             });
 
             return {
-                figure: f.format(figure),
+                figure: figure === 0 ? '-' : f.format(figure),
                 trend,
                 details,
                 yAxisFormatter: function () { return f.format(this.value); },
@@ -154,9 +153,9 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
         [view_option.REV]: ((compute_data, prop_name, figure, prev_figure) => {
             const trend = compute_trend(figure, prev_figure);
             const percent = noPreviousRange ? 0 : compute_PercentFormatted((figure - prev_figure) / prev_figure);
-            const details = noPreviousRange ? '' : ((trend == null
-                ? 'almost the same as '
-                : trend === 'up'
+            const details = (noPreviousRange || trend == null)
+                ? ''
+                : ((trend === 'up'
                     ? percent + ' more than '
                     : percent + ' less than ') + range.range_name);
 
@@ -171,7 +170,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
             });
 
             return {
-                figure: f.format(figure),
+                figure: figure === 0 ? '-' : f.format(figure),
                 trend,
                 details,
                 yAxisFormatter: function () { return f.format(this.value); },

@@ -5,8 +5,13 @@ export const date_range_option = Object.freeze({
     L90D: 'l90d',
     L365D: 'l365d',
     LIFE: 'Lifetime',
+
     THISY: 'THISY',
     PREVY: 'PREVY',
+
+    THISM: 'THISM',
+    PREVM: 'PREVM',
+    PREVPREVM: 'PREVPREVM',
 });
 
 export const view_option = Object.freeze({
@@ -17,6 +22,10 @@ export const view_option = Object.freeze({
 });
 
 const today = new Date();
+const this_month = today;
+const prev_month = new Date(today.getFullYear(), today.getMonth(), 0);
+const prev_prev_month = new Date(prev_month.getFullYear(), prev_month.getMonth(), 0);
+const mf = new Intl.DateTimeFormat('en', { month: 'long' })
 export const date_range = Object.freeze({
     [date_range_option.L7D]: 'Last 7 days',
     [date_range_option.L28D]: 'Last 28 days',
@@ -25,6 +34,10 @@ export const date_range = Object.freeze({
     [date_range_option.LIFE]: 'Lifetime',
     [date_range_option.THISY]: today.getFullYear(),
     [date_range_option.PREVY]: today.getFullYear() - 1,
+
+    [date_range_option.THISM]: mf.format(this_month),
+    [date_range_option.PREVM]: mf.format(prev_month),
+    [date_range_option.PREVPREVM]: mf.format(prev_prev_month),
 });
 
 export const chart_datas_target = Object.freeze({
@@ -56,46 +69,52 @@ export const compute_DateRange = (option) => {
     curr.setUTCHours(0, 0, 0, 0);
     const now = curr.getTime();
 
+    let result;
+
     switch (option) {
         case date_range_option.L28D:
-            return new DateRange(
-                'last 28 days',
+            result = new DateRange(
+                (v) => `Your channel got ${v} views in the last 28 days`,
                 'last 28 days',
                 new Date(now - 27 * day),
                 curr,
                 new Date(now - (27 * 2 + 1) * day),
                 new Date(now - (27 + 1) * day),
-            )
+            );
+            break;
 
         case date_range_option.L90D:
-            return new DateRange(
-                'last 90 days',
+            result = new DateRange(
+                (v) => `Your channel got ${v} views in the last 90 days`,
                 'last 90 days',
                 new Date(now - 89 * day),
                 curr,
                 new Date(now - (89 * 2 + 1) * day),
                 new Date(now - (89 + 1) * day),
-            )
+            );
+            break;
 
         case date_range_option.L365D:
-            return new DateRange(
-                'last 365 days',
+            result = new DateRange(
+                (v) => `Your channel got ${v} views in the last 365 days`,
                 'last 365 days',
                 new Date(now - 364 * day),
                 curr,
                 new Date(now - (364 * 2 + 1) * day),
                 new Date(now - (364 + 1) * day),
-            )
+            );
+            break;
 
         case date_range_option.LIFE:
-            return new DateRange(
-                null,
+            result = new DateRange(
+                v => `Your channel has gotten ${v} views so far`,
                 null,
                 new Date(2023, 3, 19, 0, 0, 0, 0), // 19 Apr 2023
                 curr,
                 null,
                 null,
-            )
+            );
+            break;
 
         case date_range_option.THISY: {
             const number_of_days_since_this_year = Math.floor(
@@ -114,14 +133,15 @@ export const compute_DateRange = (option) => {
                 year: 'numeric'
             });
 
-            return new DateRange(
-                curr.getFullYear(),
+            result = new DateRange(
+                (v) => `Your channel got ${v} views in ${curr.getFullYear()}`,
                 f1.format(prev_from) + ' - ' + f2.format(prev_till),
                 new Date(curr.getFullYear(), 0, 1),
                 curr,
                 prev_from,
                 prev_till,
-            )
+            );
+            break;
         };
 
         case date_range_option.PREVY: {
@@ -139,57 +159,192 @@ export const compute_DateRange = (option) => {
                 year: 'numeric'
             });
 
-            return new DateRange(
-                curr.getFullYear(),
+            result = new DateRange(
+                (v) => `Your channel got ${v} views in ${curr.getFullYear()}`,
                 f1.format(prev_from) + ' - ' + f2.format(prev_till),
                 new Date(curr.getFullYear() - 1, 0, 1),
                 new Date(curr.getFullYear(), 0, 0),
                 prev_from,
                 prev_till,
-            )
-        }
+            );
+            break;
+        };
+
+        case date_range_option.THISM: {
+            const number_of_days_since_this_month = Math.floor(
+                curr.getTime() - new Date(curr.getFullYear(), curr.getMonth(), 1).getTime()
+            );
+            const prev_from = new Date(new Date(curr.getFullYear(), curr.getMonth(), 1).getTime() - number_of_days_since_this_month);
+            const prev_till = new Date(curr.getFullYear(), curr.getMonth(), 0)
+
+            const f1 = new Intl.DateTimeFormat('en', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+            const f2 = new Intl.DateTimeFormat('en', {
+                month: 'long',
+            });
+
+            result = new DateRange(
+                (v) => `Your channel got ${v} views in ${f2.format(curr)}`,
+                f1.formatRange(prev_from, prev_till),
+                new Date(curr.getFullYear(), curr.getMonth(), 1),
+                curr,
+                prev_from,
+                prev_till,
+            );
+            break;
+        };
+
+        case date_range_option.PREVM: {
+            const curr_till = new Date(curr.getFullYear(), curr.getMonth(), 0);
+            const curr_from = new Date(curr_till.getFullYear(), curr_till.getMonth(), 1);
+            const number_of_days_since_prev_month = Math.floor(
+                curr_till.getTime() - curr_from.getTime()
+            );
+            const prev_till = new Date(curr_from.getFullYear(), curr_from.getMonth(), 0);
+            const prev_from = new Date(prev_till.getTime() - number_of_days_since_prev_month);
+
+            const f1 = new Intl.DateTimeFormat('en', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+            const f2 = new Intl.DateTimeFormat('en', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+            const f3 = new Intl.DateTimeFormat('en', {
+                month: 'long',
+            })
+
+            result = new DateRange(
+                (v) => `Your channel got ${v} views in ${f3.format(prev_from)}`,
+                f1.formatRange(prev_from, prev_till),
+                curr_from,
+                curr_till,
+                prev_from,
+                prev_till,
+            );
+            break;
+        };
+
+        case date_range_option.PREVPREVM: {
+            let curr_till = new Date(curr.getFullYear(), curr.getMonth(), 0);
+            let curr_from = new Date(curr_till.getFullYear(), curr_till.getMonth(), 1);
+            curr_till = new Date(curr_till.getFullYear(), curr_till.getMonth(), 0);
+            curr_from = new Date(curr_till.getFullYear(), curr_till.getMonth(), 1);
+            const number_of_days_since_prev_month = Math.floor(
+                curr_till.getTime() - curr_from.getTime()
+            );
+            const prev_till = new Date(curr_from.getFullYear(), curr_from.getMonth(), 0);
+            const prev_from = new Date(prev_till.getTime() - number_of_days_since_prev_month);
+
+            const f1 = new Intl.DateTimeFormat('en', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+            const f2 = new Intl.DateTimeFormat('en', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+            const f3 = new Intl.DateTimeFormat('en', {
+                month: 'long',
+            })
+
+            result = new DateRange(
+                (v) => `Your channel got ${v} views in ${f3.format(prev_from)}`,
+                f1.formatRange(prev_from, prev_till),
+                curr_from,
+                curr_till,
+                prev_from,
+                prev_till,
+            );
+            break;
+        };
 
         default:
         case date_range_option.L7D:
-            return new DateRange(
-                'last 7 days',
+            result = new DateRange(
+                (v) => `Your channel got ${v} views in the last 7 days`,
                 'last 7 days',
                 new Date(now - 6 * day),
                 curr,
                 new Date(now - (6 * 2 + 1) * day),
                 new Date(now - (6 + 1) * day),
-            )
+            );
+            break;
     }
+
+    console.dir(result)
+
+    return result;
 }
 // -------------------------------------------------------------------------
 
 // FORMATTERS
 export const compute_DateRange_DaysFormatted = (option) => {
     const day = 24 * 60 * 60 * 1000;
-    const now = Date.now() - day;
+    const now = new Date(new Date(new Date() - day).setUTCHours(0, 0, 0, 0));
 
-    const curr = new Date(now);
+    let curr = 0;
     let prev = 0;
 
     switch (option) {
         case date_range_option.L28D:
+            curr = now;
             prev = new Date(now - 27 * day);
             break;
 
         case date_range_option.L90D:
+            curr = now;
             prev = new Date(now - 89 * day);
             break;
 
         case date_range_option.L365D:
+            curr = now;
             prev = new Date(now - 364 * day);
             break;
 
         case date_range_option.LIFE:
+            curr = now;
             prev = new Date(2023, 3, 19); // 19 Apr 2023
+            break;
+
+        case date_range_option.THISY:
+            curr = now;
+            prev = new Date(now.getFullYear(), 0, 1);
+            break;
+
+        case date_range_option.PREVY:
+            curr = new Date(now.getFullYear(), 0, 0);
+            prev = new Date(now.getFullYear() - 1, 0, 1);
+            break;
+
+        case date_range_option.THISM:
+            curr = now;
+            prev = new Date(now.getFullYear(), now.getMonth(), 1);
+            break;
+
+        case date_range_option.PREVM:
+            curr = new Date(now.getFullYear(), now.getMonth(), 0);
+            prev = new Date(curr.getFullYear(), curr.getMonth(), 1);
+            break;
+
+        case date_range_option.PREVPREVM:
+            curr = new Date(now.getFullYear(), now.getMonth(), 0);
+            prev = new Date(curr.getFullYear(), curr.getMonth(), 0);
+            curr = prev;
+            prev = new Date(prev.getFullYear(), prev.getMonth(), 1);
             break;
 
         default:
         case date_range_option.L7D:
+            curr = now;
             prev = new Date(now - 6 * day);
             break;
     }
@@ -206,8 +361,8 @@ export const compute_DateRange_DaysFormatted = (option) => {
                 year: 'numeric'
             });
 
-            const month_prev = f1.format(new Date(curr.getFullYear(), 0));
-            const month_curr = f2.format(new Date(curr));
+            const month_prev = f1.format(prev);
+            const month_curr = f2.format(curr);
 
             return month_prev + ' - ' + month_curr;
         } else if (option === date_range_option.PREVY) {
@@ -221,9 +376,8 @@ export const compute_DateRange_DaysFormatted = (option) => {
                 year: 'numeric'
             });
 
-            const last_year = curr.getFullYear() - 1;
-            const month_prev = f1.format(new Date(last_year, 0));
-            const month_curr = f2.format(new Date(last_year, 12, 0));
+            const month_prev = f1.format(prev);
+            const month_curr = f2.format(curr);
 
             return month_prev + ' - ' + month_curr;
         } else if (curr.getMonth() === prev.getMonth()) {
