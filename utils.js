@@ -162,7 +162,7 @@ export const compute_DateRange = (option) => {
             });
 
             result = new DateRange(
-                (v) => `Your channel got ${v} views in ${curr_from.getFullYear()}`,
+                (v) => `Your channel got ${v} views in ${curr_till.getFullYear()}`,
                 f1.format(prev_from) + ' - ' + f2.format(prev_till),
                 curr_from,
                 curr_till,
