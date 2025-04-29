@@ -1,4 +1,4 @@
-import { compute_DateRange, compute_PercentFormatted, view_option } from "./utils.js"
+import { compute_DateRange, compute_PercentFormatted, date_range_option, view_option } from "./utils.js"
 
 export function ComposeDataForChart48H(datas) {
     const today = new Date();
@@ -40,18 +40,23 @@ export function ComposeDataForChart48H(datas) {
 
 export function ComposeDataForChartMain(datas, selected_date_range_option, selected_view_option) {
     const range = compute_DateRange(selected_date_range_option);
+    const noPreviousRange = selected_date_range_option === date_range_option.LIFE; 
     const main_datas = datas.filter(({ timestamp }) => (timestamp >= range.curr_from) && (timestamp <= range.curr_till));
-    const compared_datas = datas.filter(({ timestamp }) => (timestamp >= range.prev_from) && (timestamp <= range.prev_till));
+    const compared_datas = noPreviousRange
+        ? null
+        : datas.filter(({ timestamp }) => (timestamp >= range.prev_from) && (timestamp <= range.prev_till));
+    
+    const compute_trend = (figure, prev_figure) => noPreviousRange ? null : figure > prev_figure ? 'up' : figure < prev_figure ? 'down' : null;
 
     return {
         [view_option.VIEWS]: ((compute_data, prop_name, figure, prev_figure) => {
-            const trend = figure > prev_figure ? 'up' : figure < prev_figure ? 'down' : null;
-            const percent = compute_PercentFormatted((figure - prev_figure) / prev_figure);
-            const details = (trend == null
+            const trend = compute_trend(figure, prev_figure);
+            const percent = noPreviousRange ? 0 : compute_PercentFormatted((figure - prev_figure) / prev_figure);
+            const details = noPreviousRange ? '' : ((trend == null
                 ? 'almost the same as '
                 : trend === 'up'
                     ? percent + ' more than '
-                    : percent + ' less than ') + range.name;
+                    : percent + ' less than ') + range.name);
 
             const f = new Intl.NumberFormat('en', {
                 notation: 'compact',
@@ -73,17 +78,17 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
             selected_view_option === view_option.VIEWS,
             'views',
             main_datas.reduce((acc, entry) => acc + entry.views, 0),
-            compared_datas.reduce((acc, entry) => acc + entry.views, 0)
+            noPreviousRange ? [] : compared_datas.reduce((acc, entry) => acc + entry.views, 0)
         ),
 
         [view_option.WATCH]: ((compute_data, prop_name, figure, prev_figure) => {
-            const trend = figure > prev_figure ? 'up' : figure < prev_figure ? 'down' : null;
-            const percent = compute_PercentFormatted((figure - prev_figure) / prev_figure);
-            const details = (trend == null
+            const trend = compute_trend(figure, prev_figure);
+            const percent = noPreviousRange ? 0 : compute_PercentFormatted((figure - prev_figure) / prev_figure);
+            const details = noPreviousRange ? '' : ((trend == null
                 ? 'almost the same as '
                 : trend === 'up'
                     ? percent + ' more than '
-                    : percent + ' less than ') + range.name;
+                    : percent + ' less than ') + range.name);
 
             return {
                 figure: figure.toFixed(2),
@@ -100,17 +105,17 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
             selected_view_option === view_option.WATCH,
             'watch',
             main_datas.reduce((acc, entry) => acc + entry.watch, 0),
-            compared_datas.reduce((acc, entry) => acc + entry.watch, 0)
+            noPreviousRange ? [] :  compared_datas.reduce((acc, entry) => acc + entry.watch, 0)
         ),
 
         [view_option.SUBS]: ((compute_data, prop_name, figure, prev_figure) => {
-            const trend = figure > prev_figure ? 'up' : figure < prev_figure ? 'down' : null;
-            const percent = compute_PercentFormatted((figure - prev_figure) / prev_figure);
-            const details = (trend == null
+            const trend = compute_trend(figure, prev_figure);
+            const percent = noPreviousRange ? 0 : compute_PercentFormatted((figure - prev_figure) / prev_figure);
+            const details = noPreviousRange ? '' : ((trend == null
                 ? 'almost the same as '
                 : trend === 'up'
                     ? percent + ' more than '
-                    : percent + ' less than ') + range.name;
+                    : percent + ' less than ') + range.name);
 
             const f = new Intl.NumberFormat('en', {
                 notation: 'compact',
@@ -132,17 +137,17 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
             selected_view_option === view_option.SUBS,
             'subscribers',
             main_datas.reduce((acc, entry) => acc + entry.subscribers, 0),
-            compared_datas.reduce((acc, entry) => acc + entry.subscribers, 0)
+            noPreviousRange ? [] : compared_datas.reduce((acc, entry) => acc + entry.subscribers, 0)
         ),
 
         [view_option.REV]: ((compute_data, prop_name, figure, prev_figure) => {
-            const trend = figure > prev_figure ? 'up' : figure < prev_figure ? 'down' : null;
-            const percent = compute_PercentFormatted((figure - prev_figure) / prev_figure);
-            const details = (trend == null
+            const trend = compute_trend(figure, prev_figure);
+            const percent = noPreviousRange ? 0 : compute_PercentFormatted((figure - prev_figure) / prev_figure);
+            const details = noPreviousRange ? '' : ((trend == null
                 ? 'almost the same as '
                 : trend === 'up'
                     ? percent + ' more than '
-                    : percent + ' less than ') + range.name;
+                    : percent + ' less than ') + range.name);
 
             const f = new Intl.NumberFormat('en', {
                 style: 'currency',
@@ -169,7 +174,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
             selected_view_option === view_option.REV,
             'revenue',
             main_datas.reduce((acc, entry) => acc + entry.revenue, 0),
-            compared_datas.reduce((acc, entry) => acc + entry.revenue, 0)
+            noPreviousRange ? [] : compared_datas.reduce((acc, entry) => acc + entry.revenue, 0)
         ),
     };
 }

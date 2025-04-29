@@ -388,7 +388,7 @@ function SpinChart48H() {
             }
         }],
         tooltip: {
-            hideDelay: 0,
+            animation: false,
             outside: true,
             backgroundColor: 'rgb(40, 40, 40)',
             borderColor: 'rgb(61, 61, 61)',

@@ -42,9 +42,9 @@ export class DateRange {
         this.curr_till = curr_till;
         this.curr_till.setUTCHours(23, 59, 59, 999);
         this.prev_from = prev_from;
-        this.prev_from.setUTCHours(0, 0, 0, 0);
+        this.prev_from?.setUTCHours(0, 0, 0, 0);
         this.prev_till = prev_till;
-        this.prev_till.setUTCHours(23, 59, 59, 999);
+        this.prev_till?.setUTCHours(23, 59, 59, 999);
     }
 }
 
