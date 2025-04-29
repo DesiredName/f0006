@@ -75,7 +75,7 @@ export const compute_DateRange = (option) => {
         case date_range_option.L28D:
             result = new DateRange(
                 (v) => `Your channel got ${v} views in the last 28 days`,
-                'last 28 days',
+                '28 days',
                 new Date(now - 27 * day),
                 curr,
                 new Date(now - (27 * 2 + 1) * day),
@@ -86,7 +86,7 @@ export const compute_DateRange = (option) => {
         case date_range_option.L90D:
             result = new DateRange(
                 (v) => `Your channel got ${v} views in the last 90 days`,
-                'last 90 days',
+                '90 days',
                 new Date(now - 89 * day),
                 curr,
                 new Date(now - (89 * 2 + 1) * day),
@@ -97,7 +97,7 @@ export const compute_DateRange = (option) => {
         case date_range_option.L365D:
             result = new DateRange(
                 (v) => `Your channel got ${v} views in the last 365 days`,
-                'last 365 days',
+                '365 days',
                 new Date(now - 364 * day),
                 curr,
                 new Date(now - (364 * 2 + 1) * day),
@@ -273,7 +273,7 @@ export const compute_DateRange = (option) => {
         case date_range_option.L7D:
             result = new DateRange(
                 (v) => `Your channel got ${v} views in the last 7 days`,
-                'last 7 days',
+                '7 days',
                 new Date(now - 6 * day),
                 curr,
                 new Date(now - (6 * 2 + 1) * day),
@@ -421,7 +421,9 @@ export const compute_LiveViewers_NumberFormatted = (num) => {
 }
 
 export const compute_PercentFormatted = (val) => {
-    if (Math.abs(val) > 999) {
+    if (Math.abs(val) < 1) {
+        return null;
+    } else if (Math.abs(val) > 999) {
         return (Math.sign(val) * 999) + '%';
     } else {
         return val.toFixed(1) + '%';
