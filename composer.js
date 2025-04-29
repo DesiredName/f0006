@@ -1,8 +1,8 @@
-import { chart_datas_target, compute_DateRange, view_option } from "./utils.js"
+import { chart_datas_target, compute_DateRange, compute_PercentFormatted, view_option } from "./utils.js"
 
-export default function ComposeData(target, { data }, date_range_option) {
+export default function ComposeData(target, { data }, date_range_option, selected_view_option) {
     if (target === chart_datas_target.ChartMain) {
-        return ComposeDataForChartMain(data, date_range_option);
+        return ComposeDataForChartMain(data, date_range_option, selected_view_option);
     } else if (target === chart_datas_target.Chart48H) {
         return ComposeDataForChart48H(data);
     } else {
@@ -12,7 +12,7 @@ export default function ComposeData(target, { data }, date_range_option) {
 
 function ComposeDataForChart48H(datas) {
     const today = new Date();
-    today.setUTCHours(0, 0 ,0, 0);
+    today.setUTCHours(0, 0, 0, 0);
     const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
 
     const f = new Intl.DateTimeFormat('en', {
@@ -48,46 +48,110 @@ function ComposeDataForChart48H(datas) {
     });
 };
 
-function ComposeDataForChartMain(datas, selected_date_range_option) {
+function ComposeDataForChartMain(datas, selected_date_range_option, selected_view_option) {
     const range = compute_DateRange(selected_date_range_option);
     const main_datas = datas.filter(({ timestamp }) => (timestamp >= range.curr_from) && (timestamp <= range.curr_till));
+    const compared_datas = datas.filter(({ timestamp }) => (timestamp >= range.prev_from) && (timestamp <= range.prev_till));
 
     return {
-        [view_option.VIEWS]: {
-            figure: '112',
-            trend: null,
-            details: '8% less than previous 7 days',
-            data: main_datas.map((entry) => ({
-                x: entry.timestamp,
-                y: entry.views,
-            })),
-        },
-        [view_option.WATCH]: {
-            figure: '4.1',
-            trend: 'up',
-            details: '14% more than previous 7 days',
-            data: main_datas.map((entry) => ({
-                x: entry.timestamp,
-                y: entry.watch,
-            })),
-        },
-        [view_option.SUBS]: {
-            figure: '-4',
-            trend: 'down',
-            details: '200% more than previous 7 days',
-            data: main_datas.map((entry) => ({
-                x: entry.timestamp,
-                y: entry.subscribers,
-            })),
-        },
-        [view_option.REV]: {
-            figure: '$0.12',
-            trend: 'up',
-            details: '32% more than previous 7 days',
-            data: main_datas.map((entry) => ({
-                x: entry.timestamp,
-                y: entry.revenue,
-            })),
-        }
+        [view_option.VIEWS]: ((compute_data, prop_name, figure, prev_figure) => {
+            const trend = figure > prev_figure ? 'up' : figure < prev_figure ? 'down' : null;
+            const percent = compute_PercentFormatted((figure - prev_figure) / prev_figure);
+            const details = trend == null
+                ? 'almost the same as'
+                : trend === 'up'
+                    ? percent + ' more than previous 7 days'
+                    : percent + ' less than previous 7 days';
+                    
+            return {
+                figure,
+                trend,
+                details,
+                data: compute_data ? main_datas.map((entry) => ({
+                    x: entry.timestamp,
+                    y: entry[prop_name],
+                })) : [],
+            }
+        })(
+            selected_view_option === view_option.VIEWS,
+            'views',
+            main_datas.reduce((acc, entry) => acc + entry.views, 0),
+            compared_datas.reduce((acc, entry) => acc + entry.views, 0)
+        ),
+
+        [view_option.WATCH]: ((compute_data, prop_name, figure, prev_figure) => {
+            const trend = figure > prev_figure ? 'up' : figure < prev_figure ? 'down' : null;
+            const percent = compute_PercentFormatted((figure - prev_figure) / prev_figure);
+            const details = trend == null
+                ? 'almost the same as'
+                : trend === 'up'
+                    ? percent + ' more than previous 7 days'
+                    : percent + ' less than previous 7 days';
+                    
+            return {
+                figure: figure.toFixed(2),
+                trend,
+                details,
+                data: compute_data ? main_datas.map((entry) => ({
+                    x: entry.timestamp,
+                    y: entry[prop_name],
+                })) : [],
+            }
+        })(
+            selected_view_option === view_option.WATCH,
+            'watch',
+            main_datas.reduce((acc, entry) => acc + entry.watch, 0),
+            compared_datas.reduce((acc, entry) => acc + entry.watch, 0)
+        ),
+
+        [view_option.SUBS]: ((compute_data, prop_name, figure, prev_figure) => {
+            const trend = figure > prev_figure ? 'up' : figure < prev_figure ? 'down' : null;
+            const percent = compute_PercentFormatted((figure - prev_figure) / prev_figure);
+            const details = trend == null
+                ? 'almost the same as'
+                : trend === 'up'
+                    ? percent + ' more than previous 7 days'
+                    : percent + ' less than previous 7 days';
+                    
+            return {
+                figure,
+                trend,
+                details,
+                data: compute_data ? main_datas.map((entry) => ({
+                    x: entry.timestamp,
+                    y: entry[prop_name],
+                })) : [],
+            }
+        })(
+            selected_view_option === view_option.SUBS,
+            'subscribers',
+            main_datas.reduce((acc, entry) => acc + entry.subscribers, 0),
+            compared_datas.reduce((acc, entry) => acc + entry.subscribers, 0)
+        ),
+
+        [view_option.REV]: ((compute_data, prop_name, figure, prev_figure) => {
+            const trend = figure > prev_figure ? 'up' : figure < prev_figure ? 'down' : null;
+            const percent = compute_PercentFormatted((figure - prev_figure) / prev_figure);
+            const details = trend == null
+                ? 'almost the same as'
+                : trend === 'up'
+                    ? percent + ' more than previous 7 days'
+                    : percent + ' less than previous 7 days';
+                    
+            return {
+                figure: '$' + figure.toFixed(2),
+                trend,
+                details,
+                data: compute_data ? main_datas.map((entry) => ({
+                    x: entry.timestamp,
+                    y: entry[prop_name],
+                })) : [],
+            }
+        })(
+            selected_view_option === view_option.REV,
+            'revenue',
+            main_datas.reduce((acc, entry) => acc + entry.revenue, 0),
+            compared_datas.reduce((acc, entry) => acc + entry.revenue, 0)
+        ),
     };
 }

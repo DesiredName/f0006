@@ -219,6 +219,14 @@ export const compute_LiveViewers_NumberFormatted = (num) => {
 
     return f.format(num);
 }
+
+export const compute_PercentFormatted = (val) => {
+    if (Math.abs(val) > 999) {
+        return (Math.sign(val) * 999) + '%';
+    } else {
+        return val.toFixed(1) + '%';
+    }
+}
 // -------------------------------------------------------------------------
 
 

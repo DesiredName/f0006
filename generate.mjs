@@ -14,8 +14,8 @@ for (let day = 800; day >= 0; day--) {
     const timestamp = new Date(today - (delta * day));
     const views = Math.round(Math.random() * 10);
     const watch = (Math.random() * views).toFixed(2);
-    const subscribers = Math.round(Math.random() * watch);
-    const revenue = (Math.random() * subscribers).toFixed(2);
+    const subscribers = Math.round(Math.random() * watch) * (Math.random() > 0.4 ? -1 : 1);
+    const revenue = subscribers > 0 ? (Math.random()).toFixed(2) : 0;
 
     data.push([timestamp, views, watch, subscribers, revenue]);
 }

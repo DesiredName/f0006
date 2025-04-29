@@ -7,7 +7,6 @@ import {
     compute_DateRange_DaysFormatted,
     compute_LiveViewers_NumberFormatted,
     chart_datas_target,
-    compute_DateRange
 } from './utils.js';
 import ComposeData from './composer.js';
 import { samples_48h, samples_main } from './samples.js';
@@ -102,7 +101,7 @@ const state = reactive({
         this.selectedDateRange_Title = date_range[option];
         this.selectedDateRange_DaysFormatted = compute_DateRange_DaysFormatted(option);
 
-        this.view_options_datas = ComposeData(chart_datas_target.ChartMain, raw_main_datas, option);
+        this.view_options_datas = ComposeData(chart_datas_target.ChartMain, raw_main_datas, option, this.selected_view_option);
 
         if (updateChart === true) {
             this.chartMain.update({
@@ -117,7 +116,7 @@ const state = reactive({
         this.selected_view_option_el?.classList.add('iron-selected');
 
         this.selected_view_option = option;
-        this.view_options_datas = ComposeData(chart_datas_target.ChartMain, raw_main_datas, this.selected_date_range_option);
+        this.view_options_datas = ComposeData(chart_datas_target.ChartMain, raw_main_datas, this.selected_date_range_option, option);
 
         if (updateChart === true) {
             this.chartMain.update({
