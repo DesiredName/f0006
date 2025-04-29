@@ -47,8 +47,19 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
         : datas.filter(({ timestamp }) => (timestamp >= range.prev_from) && (timestamp <= range.prev_till));
     
     const compute_trend = (figure, prev_figure) => noPreviousRange ? null : figure > prev_figure ? 'up' : figure < prev_figure ? 'down' : null;
+    const main_title = ((t) => {
+        const f = new Intl.NumberFormat('en', {
+            style: 'decimal'
+        });
+
+        return noPreviousRange
+            ? `Your channel has gotten ${f.format(t)} views so far`
+            : `Your channel got ${f.format(t)} views in the ${range.name}`;
+    })(main_datas.reduce((acc, entry) => acc + entry.views, 0));
 
     return {
+        main_title,
+        
         [view_option.VIEWS]: ((compute_data, prop_name, figure, prev_figure) => {
             const trend = compute_trend(figure, prev_figure);
             const percent = noPreviousRange ? 0 : compute_PercentFormatted((figure - prev_figure) / prev_figure);

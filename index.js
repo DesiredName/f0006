@@ -34,6 +34,7 @@ const state = reactive({
 
     //
     view_options_datas: {
+        main_title: '',
         [view_option.VIEWS]: {
             figure: '112',
             trend: null,
@@ -66,9 +67,6 @@ const state = reactive({
     sidebar_datas: {
         live_viewers: compute_LiveViewers_NumberFormatted(1734),
         live_views: 0,
-    },
-    main_title_datas: {
-        title_html: 'Your channel got 97&nbsp;views in the last 7&nbsp;days'
     },
 
     chartMain: null,
