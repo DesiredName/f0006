@@ -8,7 +8,7 @@ import {
     compute_LiveViewers_NumberFormatted,
     chart_datas_target,
 } from './utils.js';
-import ComposeData from './composer.js';
+import { ComposeDataForChart48H, ComposeDataForChartMain } from './composer.js';
 import { samples_48h, samples_main } from './samples.js';
 import TrendIcon from './TrendIcon.js';
 
@@ -37,30 +37,35 @@ const state = reactive({
         [view_option.VIEWS]: {
             figure: '112',
             trend: null,
+            yAxisFormatter: undefined,
             details: '8% less than previous 7 days',
             data: [],
         },
         [view_option.WATCH]: {
             figure: '4.1',
             trend: 'up',
+            yAxisFormatter: undefined,
             details: '14% more than previous 7 days',
             data: [],
         },
         [view_option.SUBS]: {
             figure: '-4',
             trend: 'down',
+            yAxisFormatter: undefined,
             details: '200% more than previous 7 days',
             data: [],
         },
         [view_option.REV]: {
             figure: '$0.12',
             trend: 'up',
+            yAxisFormatter: undefined,
             details: '32% more than previous 7 days',
             data: [],
         }
     },
     sidebar_datas: {
-        live_viewers: compute_LiveViewers_NumberFormatted(1734)
+        live_viewers: compute_LiveViewers_NumberFormatted(1734),
+        live_views: 0,
     },
     main_title_datas: {
         title_html: 'Your channel got 97&nbsp;views in the last 7&nbsp;days'
@@ -101,12 +106,10 @@ const state = reactive({
         this.selectedDateRange_Title = date_range[option];
         this.selectedDateRange_DaysFormatted = compute_DateRange_DaysFormatted(option);
 
-        this.view_options_datas = ComposeData(chart_datas_target.ChartMain, raw_main_datas, option, this.selected_view_option);
+        this.view_options_datas = ComposeDataForChartMain(raw_main_datas, option, this.selected_view_option);
 
         if (updateChart === true) {
-            this.chartMain.update({
-                series: { data: this.view_options_datas[this.selected_view_option].data }
-            });
+            this.setMainChartSeries(this.view_options_datas[this.selected_view_option]);
         }
     },
 
@@ -116,12 +119,10 @@ const state = reactive({
         this.selected_view_option_el?.classList.add('iron-selected');
 
         this.selected_view_option = option;
-        this.view_options_datas = ComposeData(chart_datas_target.ChartMain, raw_main_datas, this.selected_date_range_option, option);
+        this.view_options_datas = ComposeDataForChartMain(raw_main_datas, this.selected_date_range_option, option);
 
         if (updateChart === true) {
-            this.chartMain.update({
-                series: { data: this.view_options_datas[option].data }
-            });
+            this.setMainChartSeries(this.view_options_datas[option]);
         }
     },
 
@@ -133,6 +134,24 @@ const state = reactive({
         if (val != null) {
             this.sidebar_datas.live_viewers = compute_LiveViewers_NumberFormatted(val);
         }
+    },
+
+    setMainChartSeries(datas) {
+        this.chartMain.update({
+            yAxis: {
+                labels: {
+                    formatter: datas.yAxisFormatter
+                }
+            },
+            series: { data: datas.data }
+        });
+    },
+
+    set48HChartSeries(data) {
+        this.sidebar_datas.live_views = data.reduce((acc, { y }) => acc + y, 0);
+        this.chart48h.update({
+            series: { data }
+        });
     },
 });
 
@@ -151,12 +170,8 @@ createApp({
         state.selectDateRangeId(date_range_option.L7D, false);
         state.selectChartView(view_option.VIEWS, false);
 
-        state.chartMain.update({
-            series: { data: state.view_options_datas[view_option.VIEWS].data }
-        });
-        state.chart48h.update({
-            series: { data: ComposeData(chart_datas_target.Chart48H, samples_48h) }
-        });
+        state.setMainChartSeries(state.view_options_datas[view_option.VIEWS]);
+        state.set48HChartSeries(ComposeDataForChart48H(samples_48h));
     },
     uploadChartMainDatas(e) {
         e.preventDefault();
@@ -190,15 +205,13 @@ upload_dialog_file.addEventListener('change', (e) => {
     Papa.parse(file, {
         header: true,
         dynamicTyping: true,
-        complete: function (results) {
+        complete: function ({ data }) {
             if (target === chart_datas_target.Chart48H) {
-                state.chart48h.update({
-                    series: { data: ComposeData(target, results) }
-                });
+                state.set48HChartSeries(ComposeDataForChart48H(data));
             }
 
             if (target === chart_datas_target.ChartMain) {
-                raw_main_datas = Object.freeze(results);
+                raw_main_datas = Object.freeze(data);
                 state.selectDateRangeId(state.selected_date_range_option);
             }
         }
@@ -259,9 +272,6 @@ function SpinChartMain() {
             gridLineColor: '#323232',
             gridLineWidth: 2,
             title: false,
-            labels: {
-                format: '{value:.1f}',
-            },
         },
         legend: false,
         series: [{
@@ -272,9 +282,8 @@ function SpinChartMain() {
             fillColor: 'rgba(65, 180, 217, 0.1)',
         }],
         tooltip: {
-            hideDelay: 0,
+            animation: false,
             outside: true,
-            className: 'chart-tooltip',
             backgroundColor: 'rgb(40, 40, 40)',
             borderColor: 'rgb(61, 61, 61)',
             borderWidth: 1,
@@ -287,7 +296,7 @@ function SpinChartMain() {
                     month: 'short',
                     day: 'numeric',
                     year: 'numeric'
-                }) + '</span><br/><br/><span class="tooltip-value">' + this.y + "</span>";
+                }) + '</span><br/><br/><span class="tooltip-value">' + (this.t ?? this.y) + "</span>";
             }
         },
         plotOptions: {
@@ -381,7 +390,6 @@ function SpinChart48H() {
         tooltip: {
             hideDelay: 0,
             outside: true,
-            className: 'chart-tooltip',
             backgroundColor: 'rgb(40, 40, 40)',
             borderColor: 'rgb(61, 61, 61)',
             borderWidth: 1,

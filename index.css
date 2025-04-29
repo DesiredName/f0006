@@ -12,6 +12,13 @@
 }
 
 /* Tooltip */
+.highcharts-tooltip-container {
+    transition-property: all;
+    transition-delay: 0;
+    transition-duration: 150ms;
+    transition-timing-function: linear;
+}
+
 .highcharts-tooltip {
     padding: 10px 20px;
 }

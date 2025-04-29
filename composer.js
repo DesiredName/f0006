@@ -1,16 +1,6 @@
-import { chart_datas_target, compute_DateRange, compute_PercentFormatted, view_option } from "./utils.js"
+import { compute_DateRange, compute_PercentFormatted, view_option } from "./utils.js"
 
-export default function ComposeData(target, { data }, date_range_option, selected_view_option) {
-    if (target === chart_datas_target.ChartMain) {
-        return ComposeDataForChartMain(data, date_range_option, selected_view_option);
-    } else if (target === chart_datas_target.Chart48H) {
-        return ComposeDataForChart48H(data);
-    } else {
-        alert('Target unknown');
-    }
-}
-
-function ComposeDataForChart48H(datas) {
+export function ComposeDataForChart48H(datas) {
     const today = new Date();
     today.setUTCHours(0, 0, 0, 0);
     const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
@@ -48,7 +38,7 @@ function ComposeDataForChart48H(datas) {
     });
 };
 
-function ComposeDataForChartMain(datas, selected_date_range_option, selected_view_option) {
+export function ComposeDataForChartMain(datas, selected_date_range_option, selected_view_option) {
     const range = compute_DateRange(selected_date_range_option);
     const main_datas = datas.filter(({ timestamp }) => (timestamp >= range.curr_from) && (timestamp <= range.curr_till));
     const compared_datas = datas.filter(({ timestamp }) => (timestamp >= range.prev_from) && (timestamp <= range.prev_till));
@@ -62,14 +52,21 @@ function ComposeDataForChartMain(datas, selected_date_range_option, selected_vie
                 : trend === 'up'
                     ? percent + ' more than previous 7 days'
                     : percent + ' less than previous 7 days';
-                    
+
+            const f = new Intl.NumberFormat('en', {
+                notation: 'compact',
+                compactDisplay: 'short',
+            });
+
             return {
-                figure,
+                figure: f.format(figure),
                 trend,
                 details,
+                yAxisFormatter: function() { return f.format(this.value); },
                 data: compute_data ? main_datas.map((entry) => ({
                     x: entry.timestamp,
                     y: entry[prop_name],
+                    t: f.format(entry[prop_name]),
                 })) : [],
             }
         })(
@@ -87,14 +84,16 @@ function ComposeDataForChartMain(datas, selected_date_range_option, selected_vie
                 : trend === 'up'
                     ? percent + ' more than previous 7 days'
                     : percent + ' less than previous 7 days';
-                    
+
             return {
                 figure: figure.toFixed(2),
                 trend,
                 details,
+                yAxisFormatter: undefined,
                 data: compute_data ? main_datas.map((entry) => ({
                     x: entry.timestamp,
                     y: entry[prop_name],
+                    t: entry[prop_name],
                 })) : [],
             }
         })(
@@ -112,14 +111,21 @@ function ComposeDataForChartMain(datas, selected_date_range_option, selected_vie
                 : trend === 'up'
                     ? percent + ' more than previous 7 days'
                     : percent + ' less than previous 7 days';
-                    
+
+            const f = new Intl.NumberFormat('en', {
+                notation: 'compact',
+                compactDisplay: 'short',
+            });
+
             return {
-                figure,
+                figure: f.format(figure),
                 trend,
                 details,
+                yAxisFormatter: function() { return f.format(this.value); },
                 data: compute_data ? main_datas.map((entry) => ({
                     x: entry.timestamp,
                     y: entry[prop_name],
+                    t: f.format(entry[prop_name]),
                 })) : [],
             }
         })(
@@ -137,14 +143,26 @@ function ComposeDataForChartMain(datas, selected_date_range_option, selected_vie
                 : trend === 'up'
                     ? percent + ' more than previous 7 days'
                     : percent + ' less than previous 7 days';
-                    
+
+            const f = new Intl.NumberFormat('en', {
+                style: 'currency',
+                notation: 'compact',
+                compactDisplay: 'short',
+                currencySign: 'standard',
+                currencyDisplay: 'symbol',
+                currency: 'USD',
+                maximumFractionDigits: 2,
+            });
+
             return {
-                figure: '$' + figure.toFixed(2),
+                figure: f.format(figure),
                 trend,
                 details,
+                yAxisFormatter: function() { return f.format(this.value); },
                 data: compute_data ? main_datas.map((entry) => ({
                     x: entry.timestamp,
                     y: entry[prop_name],
+                    t: f.format(entry[prop_name]),
                 })) : [],
             }
         })(
