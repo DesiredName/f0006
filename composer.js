@@ -47,11 +47,11 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
         [view_option.VIEWS]: ((compute_data, prop_name, figure, prev_figure) => {
             const trend = figure > prev_figure ? 'up' : figure < prev_figure ? 'down' : null;
             const percent = compute_PercentFormatted((figure - prev_figure) / prev_figure);
-            const details = trend == null
-                ? 'almost the same as'
+            const details = (trend == null
+                ? 'almost the same as '
                 : trend === 'up'
-                    ? percent + ' more than previous 7 days'
-                    : percent + ' less than previous 7 days';
+                    ? percent + ' more than '
+                    : percent + ' less than ') + range.name;
 
             const f = new Intl.NumberFormat('en', {
                 notation: 'compact',
@@ -62,7 +62,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
                 figure: f.format(figure),
                 trend,
                 details,
-                yAxisFormatter: function() { return f.format(this.value); },
+                yAxisFormatter: function () { return f.format(this.value); },
                 data: compute_data ? main_datas.map((entry) => ({
                     x: entry.timestamp,
                     y: entry[prop_name],
@@ -79,11 +79,11 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
         [view_option.WATCH]: ((compute_data, prop_name, figure, prev_figure) => {
             const trend = figure > prev_figure ? 'up' : figure < prev_figure ? 'down' : null;
             const percent = compute_PercentFormatted((figure - prev_figure) / prev_figure);
-            const details = trend == null
-                ? 'almost the same as'
+            const details = (trend == null
+                ? 'almost the same as '
                 : trend === 'up'
-                    ? percent + ' more than previous 7 days'
-                    : percent + ' less than previous 7 days';
+                    ? percent + ' more than '
+                    : percent + ' less than ') + range.name;
 
             return {
                 figure: figure.toFixed(2),
@@ -106,11 +106,11 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
         [view_option.SUBS]: ((compute_data, prop_name, figure, prev_figure) => {
             const trend = figure > prev_figure ? 'up' : figure < prev_figure ? 'down' : null;
             const percent = compute_PercentFormatted((figure - prev_figure) / prev_figure);
-            const details = trend == null
-                ? 'almost the same as'
+            const details = (trend == null
+                ? 'almost the same as '
                 : trend === 'up'
-                    ? percent + ' more than previous 7 days'
-                    : percent + ' less than previous 7 days';
+                    ? percent + ' more than '
+                    : percent + ' less than ') + range.name;
 
             const f = new Intl.NumberFormat('en', {
                 notation: 'compact',
@@ -121,7 +121,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
                 figure: f.format(figure),
                 trend,
                 details,
-                yAxisFormatter: function() { return f.format(this.value); },
+                yAxisFormatter: function () { return f.format(this.value); },
                 data: compute_data ? main_datas.map((entry) => ({
                     x: entry.timestamp,
                     y: entry[prop_name],
@@ -138,11 +138,11 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
         [view_option.REV]: ((compute_data, prop_name, figure, prev_figure) => {
             const trend = figure > prev_figure ? 'up' : figure < prev_figure ? 'down' : null;
             const percent = compute_PercentFormatted((figure - prev_figure) / prev_figure);
-            const details = trend == null
-                ? 'almost the same as'
+            const details = (trend == null
+                ? 'almost the same as '
                 : trend === 'up'
-                    ? percent + ' more than previous 7 days'
-                    : percent + ' less than previous 7 days';
+                    ? percent + ' more than '
+                    : percent + ' less than ') + range.name;
 
             const f = new Intl.NumberFormat('en', {
                 style: 'currency',
@@ -158,7 +158,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
                 figure: f.format(figure),
                 trend,
                 details,
-                yAxisFormatter: function() { return f.format(this.value); },
+                yAxisFormatter: function () { return f.format(this.value); },
                 data: compute_data ? main_datas.map((entry) => ({
                     x: entry.timestamp,
                     y: entry[prop_name],
