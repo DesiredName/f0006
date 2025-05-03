@@ -162,14 +162,20 @@ createApp({
     mounted() {
         state.hideDateSelector();
 
-        SpinChartMain();
-        SpinChart48H();
-
-        state.selectDateRangeId(date_range_option.L7D, false);
-        state.selectChartView(view_option.VIEWS, false);
-
-        state.setMainChartSeries(state.view_options_datas[view_option.VIEWS]);
-        state.set48HChartSeries(ComposeDataForChart48H(samples_48h));
+        setTimeout(() => {
+            SpinChartMain();
+            SpinChart48H();
+            
+            setTimeout(() => {
+                state.selectDateRangeId(date_range_option.L7D, false);
+                state.selectChartView(view_option.VIEWS, false);
+        
+                setTimeout(() => {
+                    state.setMainChartSeries(state.view_options_datas[view_option.VIEWS]);
+                    state.set48HChartSeries(ComposeDataForChart48H(samples_48h));
+                }, 1000);        
+            }, 1000);
+        }, 1000);
     },
     uploadChartMainDatas(e) {
         e.preventDefault();

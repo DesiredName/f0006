@@ -282,8 +282,6 @@ export const compute_DateRange = (option) => {
             break;
     }
 
-    console.dir(result)
-
     return result;
 }
 // -------------------------------------------------------------------------
