@@ -116,7 +116,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
             const ft = new Intl.NumberFormat('en', {
                 notation: 'standard',
                 minimumFractionDigits: 1,
-                maximumFractionDigits: 2,
+                maximumFractionDigits: 1,
             });
 
             return {
@@ -127,7 +127,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
                 data: compute_data ? main_datas.map((entry) => ({
                     x: entry.timestamp,
                     y: entry[prop_name],
-                    t: entry[prop_name],
+                    t: ft.format(entry[prop_name]),
                 })) : [],
             }
         })(

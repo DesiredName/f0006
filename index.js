@@ -144,14 +144,14 @@ const state = reactive({
                     formatter: datas.yAxisFormatter
                 }
             },
-            series: { data: datas.data }
+            series: [{ data: datas.data }]
         });
     },
 
     set48HChartSeries(data) {
         this.sidebar_datas.live_views = data.reduce((acc, { y }) => acc + y, 0);
         this.chart48h.update({
-            series: { data }
+            series: [{ data }]
         });
     },
 });
@@ -168,10 +168,10 @@ createApp({
         setTimeout(() => {
             SpinChartMain();
             SpinChart48H();
-            
+
             state.selectDateRangeId(date_range_option.L7D, false);
             state.selectChartView(view_option.VIEWS, false);
-            
+
             setTimeout(() => {
                 state.setMainChartSeries(state.view_options_datas[view_option.VIEWS]);
                 state.set48HChartSeries(ComposeDataForChart48H(samples_48h));
@@ -252,7 +252,7 @@ function SpinChartMain() {
                 align: 'center',
                 y: 20,
                 overflow: 'justify',
-                format: '{value:%b %e, %Y}'  // Format: "Jan 1, 2023"
+                format: '{value:%b %e, %Y}',  // Format: "Jan 1, 2023"
             },
             padding: 30,
             lineColor: '#9e9e9e',
