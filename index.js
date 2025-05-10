@@ -77,10 +77,13 @@ const state = reactive({
     selectedDateRange_Title: date_range[date_range_option.L7D],
 
     toggleDateSelector() {
-        this.isDateSelectorVisible = !this.isDateSelectorVisible;
-        this.isDateSelectorVisible === true
-            ? this.showDateSelector()
-            : this.hideDateSelector();
+        const timeout = (this.isDateSelectorVisible === false) ? 150 : 0;
+        setTimeout(() => {
+            this.isDateSelectorVisible = !this.isDateSelectorVisible;
+            this.isDateSelectorVisible === true
+                ? this.showDateSelector()
+                : this.hideDateSelector();
+        }, timeout);
     },
     hideDateSelector() {
         this.isDateSelectorVisible = false;
@@ -292,6 +295,10 @@ function SpinChartMain() {
             borderRadius: 12,
             padding: 18,
             shape: 'none',
+            shadow: false,
+            style: {
+                textShadow: 'none'
+            },
             formatter: function () {
                 return '<span class="tooltip-date">' + new Date(this.x).toLocaleDateString('en-US', {
                     weekday: 'short',
@@ -398,6 +405,10 @@ function SpinChart48H() {
             borderRadius: 12,
             padding: 18,
             shape: 'none',
+            shadow: false,
+            style: {
+                textShadow: 'none'
+            },
             formatter: function () {
                 return '<span class="tooltip-date">' + this.custom?.title + '</span><br/><br/><span class="tooltip-value">' + this.y + "</span>";
             }

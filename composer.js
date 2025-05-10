@@ -72,16 +72,24 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
                 notation: 'compact',
                 compactDisplay: 'short',
             });
+            const ft = new Intl.NumberFormat('en', {
+                notation: 'compact',
+                minimumFractionDigits: 1,
+                maximumFractionDigits: 2,
+            });
+            const fd = new Intl.NumberFormat('en', {
+                notation: 'standard',
+            });
 
             return {
                 figure: figure === 0 ? '-' : f.format(figure),
                 trend,
                 details,
-                yAxisFormatter: function () { return f.format(this.value); },
+                yAxisFormatter: function () { return this.value === 0 ? 0 : ft.format(this.value); },
                 data: compute_data ? main_datas.map((entry) => ({
                     x: entry.timestamp,
                     y: entry[prop_name],
-                    t: f.format(entry[prop_name]),
+                    t: fd.format(entry[prop_name]),
                 })) : [],
             }
         })(
@@ -101,11 +109,21 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
                         ? percent + ' more than last '
                         : percent + ' less than last ') + range.range_name);
 
+            const f = new Intl.NumberFormat('en', {
+                notation: 'compact',
+                compactDisplay: 'short',
+            });
+            const ft = new Intl.NumberFormat('en', {
+                notation: 'standard',
+                minimumFractionDigits: 1,
+                maximumFractionDigits: 2,
+            });
+
             return {
-                figure: figure === 0 ? '-' : figure.toFixed(2),
+                figure: figure === 0 ? '-' : f.format(figure),
                 trend,
                 details,
-                yAxisFormatter: undefined,
+                yAxisFormatter: function () { return ft.format(this.value); },
                 data: compute_data ? main_datas.map((entry) => ({
                     x: entry.timestamp,
                     y: entry[prop_name],
@@ -132,18 +150,24 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
             const f = new Intl.NumberFormat('en', {
                 notation: 'compact',
                 compactDisplay: 'short',
-                signDisplay: 'always'
+                signDisplay: "always"
+            });
+            const ft = new Intl.NumberFormat('en', {
+                notation: 'compact',
+            });
+            const fd = new Intl.NumberFormat('en', {
+                notation: 'standard',
             });
 
             return {
                 figure: figure === 0 ? '-' : f.format(figure),
                 trend,
                 details,
-                yAxisFormatter: function () { return f.format(this.value); },
+                yAxisFormatter: function () { return this.value === 0 ? 0 : ft.format(this.value); },
                 data: compute_data ? main_datas.map((entry) => ({
                     x: entry.timestamp,
                     y: entry[prop_name],
-                    t: f.format(entry[prop_name]),
+                    t: fd.format(entry[prop_name]),
                 })) : [],
             }
         })(
