@@ -7,8 +7,12 @@
     font-family: "Roboto", "Noto", sans-serif;
 }
 
+[data-id="chart-1-placeholder"] div.highcharts-axis-labels.highcharts-xaxis-labels > span:last-child {
+  transform: translateX(-8px) !important;
+}
+
 [data-id="chart-1-placeholder"] svg.highcharts-root g.highcharts-axis-labels.highcharts-xaxis-labels text:last-child {
-    transform: translateX(-30px);
+  transform: translateX(-30px) !important;
 }
 
 /* Tooltip */
