@@ -7,7 +7,7 @@
     font-family: "Roboto", "Noto", sans-serif;
 }
 
-[data-id="chart-1-placeholder"] svg.highcharts-root g.highcharts-axis-labels.highcharts-xaxis-labels text:last-child  {
+[data-id="chart-1-placeholder"] svg.highcharts-root g.highcharts-axis-labels.highcharts-xaxis-labels text:last-child {
     transform: translateX(-30px);
 }
 
@@ -69,6 +69,10 @@
   display: inline-block;
   font-size: 10px;
   line-height: 15px;
+}
+.video_marker:hover {
+  background-color: white;
+  color: white;
 }
 
 .video_marker.single {
