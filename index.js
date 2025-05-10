@@ -183,7 +183,7 @@ createApp({
     // core
     mounted() {
         state.hideDateSelector();
-        
+
         Highcharts.AST.allowedAttributes.push('data-count');
 
         setTimeout(() => {
@@ -275,8 +275,11 @@ function SpinChartMain() {
             startOnTick: true,
             endOnTick: true,
             tickLength: 0,
+            tickInterval: 86400000,
             labels: {
                 distance: 7,
+                allowOverlap: true,
+                autoRotation: undefined,
                 useHTML: true,
                 formatter: function () {
                     const xVal = this.value;
@@ -291,7 +294,10 @@ function SpinChartMain() {
                     } else {
                         return `<span class="video_marker">${number_of_videos}</span>`;
                     }
-                }
+                },
+                style: {
+                    textOverflow: 'none' // Adds "..." if text is too long
+                },
             },
         }, {
             type: 'datetime',

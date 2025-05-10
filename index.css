@@ -75,8 +75,8 @@
   line-height: 15px;
 }
 .video_marker:hover {
-  background-color: white;
-  color: white;
+  background-color: white !important;
+  color: white !important;
 }
 
 .video_marker.single {
