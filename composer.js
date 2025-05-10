@@ -54,9 +54,19 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
 
         return range.range_title(f.format(t));
     })(main_datas.reduce((acc, entry) => acc + entry.views, 0));
+    const has_videos = datas.some((entry) => entry.videos.length > 0);
 
     return {
         main_title,
+        has_videos,
+
+        videos_label_datas: {
+            data: main_datas.map((entry) => ({
+                x: entry.timestamp,
+                y: 10,
+                v: entry.videos,
+            }))
+        },
 
         [view_option.VIEWS]: ((compute_data, prop_name, figure, prev_figure) => {
             const trend = compute_trend(figure, prev_figure);
@@ -90,6 +100,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
                     x: entry.timestamp,
                     y: entry[prop_name],
                     t: fd.format(entry[prop_name]),
+                    v: entry.videos.length ? entry.videos : undefined,
                 })) : [],
             }
         })(
@@ -128,6 +139,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
                     x: entry.timestamp,
                     y: entry[prop_name],
                     t: ft.format(entry[prop_name]),
+                    v: entry.videos.length ? entry.videos : undefined,
                 })) : [],
             }
         })(
@@ -168,6 +180,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
                     x: entry.timestamp,
                     y: entry[prop_name],
                     t: fd.format(entry[prop_name]),
+                    v: entry.videos.length ? entry.videos : undefined,
                 })) : [],
             }
         })(
@@ -206,6 +219,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
                     x: entry.timestamp,
                     y: entry[prop_name],
                     t: f.format(entry[prop_name]),
+                    v: entry.videos.length ? entry.videos : undefined,
                 })) : [],
             }
         })(

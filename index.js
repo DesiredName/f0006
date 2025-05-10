@@ -20,6 +20,9 @@ const chart_2_placeholder = document.querySelector("[data-id='chart-2-placeholde
 const upload_dialog = document.getElementById('uploadDialog');
 const upload_dialog_file = document.getElementById('fileInput');
 
+// const
+const XAXIS_OFFSET = 75;
+
 let raw_main_datas = samples_main;
 
 const state = reactive({
@@ -35,6 +38,12 @@ const state = reactive({
     //
     view_options_datas: {
         main_title: '',
+        has_videos: false,
+
+        videos_label_datas: {
+            data: []
+        },
+
         [view_option.VIEWS]: {
             figure: '112',
             trend: null,
@@ -138,13 +147,23 @@ const state = reactive({
     },
 
     setMainChartSeries(datas) {
+        const has_videos = this.view_options_datas.has_videos;
+
         this.chartMain.update({
+            xAxis: [{}, {
+                height: has_videos ? XAXIS_OFFSET : undefined,
+            }],
             yAxis: {
                 labels: {
                     formatter: datas.yAxisFormatter
                 }
             },
-            series: [{ data: datas.data }]
+            series: has_videos ? [
+                { xAxis: 0, data: this.view_options_datas.videos_label_datas.data },
+                { xAxis: 1, data: datas.data },
+            ] : [
+                { xAxis: 1, data: datas.data },
+            ]
         });
     },
 
@@ -246,7 +265,23 @@ function SpinChartMain() {
             enabled: false,
         },
         title: false,
-        xAxis: {
+        xAxis: [{
+            type: 'datetime',
+            lineColor: '#cecece',
+            minPadding: 0,
+            maxPadding: 0,
+            startOnTick: true,
+            endOnTick: true,
+            tickLength: 0,
+            labels: {
+                y: 20,
+                useHTML: true,
+                formatter: function () {
+                    console.dir(this);
+                    return '<span>Cao!</span>';
+                }
+            },
+        }, {
             type: 'datetime',
             labels: {
                 align: 'center',
@@ -254,10 +289,10 @@ function SpinChartMain() {
                 overflow: 'justify',
                 format: '{value:%b %e, %Y}',  // Format: "Jan 1, 2023"
             },
-            padding: 30,
             lineColor: '#9e9e9e',
             tickWidth: 2,
             tickLength: 6,
+            height: XAXIS_OFFSET,
             tickPositioner: function (min, max) {
                 const positions = [];
                 const step = Math.ceil((max - min) / 5); // ~5 labels
@@ -270,7 +305,7 @@ function SpinChartMain() {
             maxPadding: 0,
             startOnTick: true,
             endOnTick: true,
-        },
+        }],
         yAxis: {
             opposite: true,  // Places Y-axis on the right side
             tickAmount: 4,
@@ -280,11 +315,24 @@ function SpinChartMain() {
         },
         legend: false,
         series: [{
+            xAxis: 0,
+            type: 'scatter',
+            data: [],
+            color: '#41b4d9',
+            lineColor: 'transparent',
+            lineWidth: 0,
+            fillColor: 'transparent',
+            enableMouseTracking: false,
+        }, {
+            xAxis: 1,
             data: [],
             color: '#41b4d9',
             lineColor: '#41b4d9',
             lineWidth: 2,
             fillColor: 'rgba(65, 180, 217, 0.1)',
+            marker: {
+                symbol: 'circle'
+            }
         }],
         tooltip: {
             animation: false,
