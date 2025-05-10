@@ -21,7 +21,7 @@ const upload_dialog = document.getElementById('uploadDialog');
 const upload_dialog_file = document.getElementById('fileInput');
 
 // const
-const XAXIS_OFFSET = 75;
+const XAXIS_OFFSET = 65;
 
 let raw_main_datas = samples_main;
 
@@ -183,6 +183,8 @@ createApp({
     // core
     mounted() {
         state.hideDateSelector();
+        
+        Highcharts.AST.allowedAttributes.push('data-count');
 
         setTimeout(() => {
             SpinChartMain();
@@ -274,18 +276,28 @@ function SpinChartMain() {
             endOnTick: true,
             tickLength: 0,
             labels: {
-                y: 20,
+                distance: 7,
                 useHTML: true,
                 formatter: function () {
-                    console.dir(this);
-                    return '<span>Cao!</span>';
+                    const xVal = this.value;
+                    const series = state.view_options_datas.videos_label_datas.data;
+                    const point = series.find(p => p.x.getTime() == xVal);
+                    const number_of_videos = point?.v?.length ?? 0;
+
+                    if (point == null || number_of_videos <= 0) {
+                        return ''
+                    } else if (number_of_videos === 1) {
+                        return `<span class="video_marker single"></span>`;
+                    } else {
+                        return `<span class="video_marker">${number_of_videos}</span>`;
+                    }
                 }
             },
         }, {
             type: 'datetime',
             labels: {
                 align: 'center',
-                y: 20,
+                y: 24,
                 overflow: 'justify',
                 format: '{value:%b %e, %Y}',  // Format: "Jan 1, 2023"
             },
