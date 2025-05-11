@@ -272,13 +272,6 @@ function readAndAssignChartDatas(file, target) {
     Papa.parse(file, {
         header: true,
         dynamicTyping: true,
-        transform: function(val, header) {
-            if (header === 'videos') {
-                return val == '' ? [] : val.split(';')
-            } else {
-                return val;
-            }
-        },
         complete: function ({ data }) {
             if (target === chart_datas_target.Chart48H) {
                 state.set48HChartSeries(ComposeDataForChart48H(data));
@@ -348,7 +341,7 @@ function SpinChartMain() {
                     const xVal = this.value;
                     const series = state.view_options_datas.videos_label_datas.data;
                     const point = series.find(p => p.x.getTime() == xVal);
-                    const number_of_videos = point?.v?.length ?? 0;
+                    const number_of_videos = point?.v ?? 0;
 
                     if (point == null || number_of_videos <= 0) {
                         return ''

@@ -54,7 +54,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
 
         return range.range_title(f.format(t));
     })(main_datas.reduce((acc, entry) => acc + entry.views, 0));
-    const has_videos = datas.some((entry) => entry.videos.length > 0);
+    const has_videos = datas.some((entry) => entry.videos > 0);
 
     return {
         main_title,
@@ -100,7 +100,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
                     x: entry.timestamp,
                     y: entry[prop_name],
                     t: fd.format(entry[prop_name]),
-                    v: entry.videos.length ? entry.videos : undefined,
+                    v: entry.videos,
                 })) : [],
             }
         })(
@@ -139,7 +139,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
                     x: entry.timestamp,
                     y: entry[prop_name],
                     t: ft.format(entry[prop_name]),
-                    v: entry.videos.length ? entry.videos : undefined,
+                    v: entry.videos,
                 })) : [],
             }
         })(
@@ -180,7 +180,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
                     x: entry.timestamp,
                     y: entry[prop_name],
                     t: fd.format(entry[prop_name]),
-                    v: entry.videos.length ? entry.videos : undefined,
+                    v: entry.videos
                 })) : [],
             }
         })(
@@ -219,7 +219,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
                     x: entry.timestamp,
                     y: entry[prop_name],
                     t: f.format(entry[prop_name]),
-                    v: entry.videos.length ? entry.videos : undefined,
+                    v: entry.videos
                 })) : [],
             }
         })(
