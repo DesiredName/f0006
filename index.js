@@ -78,6 +78,22 @@ const state = reactive({
         live_viewers: 1734,
         live_viewers_formatted: compute_LiveViewers_NumberFormatted(1734),
         live_views: 0,
+        top_content: [{
+            title: 'how to glow up asap in 2025 (no bs full guide)',
+            image: '/data/mqdefault.jpg',
+            views: '9',
+            viewsFormatted: compute_LiveViewers_NumberFormatted(9),
+        }, {
+            title: 'I Tried Looksmaxing For 1 Year (INSANE RESULTS)',
+            image: '/data/mqdefault.jpg',
+            views: '4',
+            viewsFormatted: compute_LiveViewers_NumberFormatted(4),
+        }, {
+            title: 'how to smell good ASAP as a man (no bs guide)',
+            image: '/data/mqdefault.webp',
+            views: '4',
+            viewsFormatted: compute_LiveViewers_NumberFormatted(4),
+        }]
     },
     misc_datas: {
         channel_name: 'Ascend Looks',
@@ -147,6 +163,23 @@ const state = reactive({
         if (val != null) {
             this.sidebar_datas.live_viewers_formatted = compute_LiveViewers_NumberFormatted(val);
         }
+    },
+    
+    setTopEntryImage(e, idx) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+            this.sidebar_datas.top_content[idx].image = reader.result;
+        }
+
+        reader.readAsDataURL(file);
+    },
+
+    setTopEntryViews(e, idx) {
+        const val = e.target.value;
+        this.sidebar_datas.top_content[idx].views = val;
+        this.sidebar_datas.top_content[idx].viewsFormatted = compute_LiveViewers_NumberFormatted(val);
     },
 
     setMainChartSeries(datas) {
