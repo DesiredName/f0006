@@ -12363,7 +12363,42 @@
       position: absolute;
       left: calc(var(--dot-min-radius)/2);
       top: calc(var(--dot-min-radius)/2);
-      transform: translate(-50%, -50%)
+      transform: translate(-50%, -50%);
+      animation: dot-anim;
+      animation-timing-function: ease-out;
+      animation-delay: 2s;
+      animation-duration: 10s;
+      animation-iteration-count: infinite;
+    }
+
+    @keyframes dot-anim {
+      0% {
+        opacity: 0;
+        width: calc(var(--dot-min-radius)/2 - var(--dot-border)/2);
+        height: calc(var(--dot-min-radius)/2 - var(--dot-border)/2);
+      }
+      
+      1% {
+        opacity: 1;
+      }
+
+      3% {
+        opacity: 0;
+        width: 38px;
+        height: 38px;
+      }
+      
+      75% {
+        opacity: 0;
+        width: calc(var(--dot-min-radius)/2 - var(--dot-border)/2);
+        height: calc(var(--dot-min-radius)/2 - var(--dot-border)/2);
+      }
+      
+      100% {
+        opacity: 0;
+        width: calc(var(--dot-min-radius)/2 - var(--dot-border)/2);
+        height: calc(var(--dot-min-radius)/2 - var(--dot-border)/2);
+      }
     }
 
     yta-anomaly-banner {
@@ -166582,9 +166617,9 @@
                   </div>
                 </tp-yt-paper-dialog> </ytcp-text-menu
               ><ytcp-topbar-menu-button-renderer id="account-button" class="style-scope ytcp-header" tabindex="0" modern="" aria-disabled="false" role="button" aria-haspopup="true"
-                ><yt-img-shadow height="32" width="32" class="style-scope ytcp-topbar-menu-button-renderer no-transition" style="background-color: transparent" loaded=""><img id="img" draggable="false" class="style-scope yt-img-shadow" alt="" height="32" width="32" src="https://yt3.ggpht.com/B12N4NdzcLO3dPBqce49f-kStqCVCTKrylZoXvGPEz4FoumrhyGw0iyGS4Z9C0jiUXY_RceW2iY=s48-c-k-c0x00ffffff-no-rj" /></yt-img-shadow>
+                ><yt-img-shadow height="32" width="32" class="style-scope ytcp-topbar-menu-button-renderer no-transition" style="background-color: transparent" loaded=""><img id="img" draggable="false" class="style-scope yt-img-shadow" alt="" height="32" width="32" src="" v-effect="$el.src = state.misc_datas.channel_image" /></yt-img-shadow>
                 <div class="labels-container style-scope ytcp-topbar-menu-button-renderer">
-                  <div id="label" class="style-scope ytcp-topbar-menu-button-renderer">Ascend Looks</div>
+                  <div id="label" class="style-scope ytcp-topbar-menu-button-renderer" v-effect="$el.textContent = state.misc_datas.channel_name">Ascend Looks</div>
                   <ytcp-tooltip for="label" position="bottom" truncation="" class="style-scope ytcp-topbar-menu-button-renderer" style="display: none"></ytcp-tooltip>
                   <div class="sublabel style-scope ytcp-topbar-menu-button-renderer">You're an editor</div>
                   <dom-if class="style-scope ytcp-topbar-menu-button-renderer"></dom-if>
@@ -166633,7 +166668,7 @@
                       ><ytcp-tooltip alignment="center" for="overlay-link-to-youtube" class="style-scope ytcp-overlay-with-link" style="display: none"></ytcp-tooltip>
                     </div></div
                 ></ytcp-overlay-with-link>
-                <img class="thumbnail image-thumbnail style-scope ytcp-navigation-drawer" alt="Ascend Looks " src="https://yt3.ggpht.com/B12N4NdzcLO3dPBqce49f-kStqCVCTKrylZoXvGPEz4FoumrhyGw0iyGS4Z9C0jiUXY_RceW2iY=s176-c-k-c0x00ffffff-no-rj" />
+                <img class="thumbnail image-thumbnail style-scope ytcp-navigation-drawer" alt="Ascend Looks " src=""  v-effect="$el.src = state.misc_datas.channel_image"  />
                 <dom-if restamp="" class="style-scope ytcp-navigation-drawer"></dom-if>
                 <dom-if restamp="" class="style-scope ytcp-navigation-drawer"></dom-if>
                 <dom-if restamp="" class="style-scope ytcp-navigation-drawer"></dom-if>
@@ -166650,16 +166685,15 @@
                 <dom-if restamp="" class="style-scope ytcp-navigation-drawer"></dom-if>
                 <dom-if restamp="" class="style-scope ytcp-navigation-drawer"></dom-if>
                 <dom-if restamp="" class="style-scope ytcp-navigation-drawer"></dom-if>
-                <div id="entity-label-container" class="style-scope ytcp-navigation-drawer">
+                <div id="entity-label-container" class="style-scope ytcp-navigation-drawer" @click="showStateEditor">
                   <div id="entity-type" class="entity-type style-scope ytcp-navigation-drawer">
                     Channel
                     <ytcp-tooltip truncation="" class="style-scope ytcp-navigation-drawer" style="display: none"></ytcp-tooltip>
                   </div>
                   <dom-if restamp="" class="style-scope ytcp-navigation-drawer"></dom-if>
                   <dom-if restamp="" class="style-scope ytcp-navigation-drawer"></dom-if>
-                  <div id="entity-name" class="entity-name style-scope ytcp-navigation-drawer">
+                  <div id="entity-name" class="entity-name style-scope ytcp-navigation-drawer" v-effect="$el.textContent = state.misc_datas.channel_name">
                     Ascend Looks
-                    <ytcp-tooltip truncation="" class="style-scope ytcp-navigation-drawer" style="display: none"></ytcp-tooltip>
                   </div>
                   <dom-if class="style-scope ytcp-navigation-drawer"></dom-if>
                 </div>
@@ -167417,7 +167451,7 @@
                                               class="style-scope yta-card-container"
                                               href="#"
                                               aria-label="See more"
-                                              ><ytcp-button class="style-scope yta-card-container style-scope yta-card-container" @click="uploadChartMainDatas" id="see-more-button" tabindex="-1" type="tonal" button-style="default" icon-alignment="start" modern="" aria-disabled="false" role="button"
+                                              ><ytcp-button class="style-scope yta-card-container style-scope yta-card-container" id="see-more-button" tabindex="-1" type="tonal" button-style="default" icon-alignment="start" modern="" aria-disabled="false" role="button"
                                                 ><ytcp-button-shape
                                                   ><button class="ytcp-button-shape-impl ytcp-button-shape-impl--tonal ytcp-button-shape-impl--mono ytcp-button-shape-impl--size-m ytcp-button-shape-impl--enable-backdrop-filter-experiment" title="" aria-label="See more" aria-disabled="false">
                                                     <div class="ytcp-button-shape-impl__button-text-content">See more</div>
@@ -167935,13 +167969,13 @@
                                         ><span class="card-subtitle style-scope yta-latest-activity-card">Updating live</span>
                                         <hr class="style-scope yta-latest-activity-card" />
                                         <div class="metric-container style-scope yta-latest-activity-card">
-                                          <div class="metric-value style-scope yta-latest-activity-card" v-effect="$el.textContent = state.sidebar_datas.live_viewers">1,733</div>
+                                          <div class="metric-value style-scope yta-latest-activity-card" v-effect="$el.textContent = state.sidebar_datas.live_viewers_formatted">1,733</div>
                                           <div class="card-subtitle style-scope yta-latest-activity-card">Subscribers</div>
                                         </div>
                                         <div class="layout horizontal style-scope yta-latest-activity-card">
                                           <ytcp-ve track-click="" track-hover="" class="style-scope yta-latest-activity-card" role="none"
                                             ><a id="see-explore-subscribers-link" tabindex="-1" class="style-scope yta-latest-activity-card" href="#"
-                                              ><ytcp-button id="see-explore-subscribers-button"  @click="state.setLiveViewers" class="style-scope yta-latest-activity-card" tabindex="-1" type="tonal" button-style="default" icon-alignment="start" modern="" aria-disabled="false" role="button"
+                                              ><ytcp-button id="see-explore-subscribers-button" class="style-scope yta-latest-activity-card" tabindex="-1" type="tonal" button-style="default" icon-alignment="start" modern="" aria-disabled="false" role="button"
                                                 ><ytcp-button-shape
                                                   ><button class="ytcp-button-shape-impl ytcp-button-shape-impl--tonal ytcp-button-shape-impl--mono ytcp-button-shape-impl--size-m ytcp-button-shape-impl--enable-backdrop-filter-experiment" title="" aria-label="See live count" aria-disabled="false">
                                                     <div class="ytcp-button-shape-impl__button-text-content">See live count</div>
@@ -168063,7 +168097,7 @@
                                       <span class="style-scope yta-card-container"
                                         ><ytcp-ve track-click="" track-hover="" class="style-scope yta-card-container" role="none"
                                           ><a id="see-more-link" tabindex="-1" class="style-scope yta-card-container" href="/channel/UCo87kiiyHRiIQ-1tOtn8KzA/analytics/tab-overview/period-week/explore?entity_type=CHANNEL&amp;entity_id=UCo87kiiyHRiIQ-1tOtn8KzA&amp;time_period=week&amp;explore_type=LATEST_ACTIVITY" aria-label="See more"
-                                            ><ytcp-button class="narrow-padding style-scope yta-card-container style-scope yta-card-container" @click="uploadChart48HDatas" id="see-more-button" tabindex="-1" type="tonal" button-style="default" icon-alignment="start" modern="" aria-disabled="false" role="button"
+                                            ><ytcp-button class="narrow-padding style-scope yta-card-container style-scope yta-card-container" id="see-more-button" tabindex="-1" type="tonal" button-style="default" icon-alignment="start" modern="" aria-disabled="false" role="button"
                                               ><ytcp-button-shape
                                                 ><button class="ytcp-button-shape-impl ytcp-button-shape-impl--tonal ytcp-button-shape-impl--mono ytcp-button-shape-impl--size-m ytcp-button-shape-impl--enable-backdrop-filter-experiment" title="" aria-label="See more" aria-disabled="false">
                                                   <div class="ytcp-button-shape-impl__button-text-content">See more</div>
@@ -168949,8 +168983,38 @@
   <script src="ripple-effect.js"></script>
   <script src="index.js" type="module" defer></script>
 
-  <dialog id="uploadDialog">
-    <input type="file" id="fileInput" accept=".csv,.txt">
+  <dialog id="statePropertiesDialog">
+    <div style="display: flex; flex-flow: column nowrap; gap: 20px;">
+      <div>
+        <div><h3>Channel properties:</h3></div>
+        <div>
+          <label>Name: <input v-model="state.misc_datas.channel_name"/></label>
+          <br>
+          <label>Image: <input type="file" id="channelImage" accept="image/*" @change="uploadChannelImage"/></label>
+        </div>
+      </div>
+      <div>
+        <div><h3>Live subscribers value</h3></div>
+        <div>
+          <label>Value: <input :value="state.sidebar_datas.live_viewers" @input="state.setLiveViewers"/></label>
+        </div>
+      </div>
+      <div>
+        <div><h3>Main chart data</h3></div>
+        <div>
+          <label>Upload data: <input type="file" id="mainChartData" accept=".csv,.txt" @change="uploadChartMainDatas"/></label>
+        </div>
+      </div>
+      <div>
+        <div><h3>48H chart data</h3></div>
+        <div>
+          <label>Upload data: <input type="file" id="48HChartData" accept=".csv,.txt" @change="uploadChart48HDatas"/></label>
+        </div>
+      </div>
+      <div>
+        <button @click="hideStateEditor">Close</button>
+      </div>
+    </div>
   </dialog>
 </body>
 

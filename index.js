@@ -19,6 +19,7 @@ const chart_1_placeholder = document.querySelector("[data-id='chart-1-placeholde
 const chart_2_placeholder = document.querySelector("[data-id='chart-2-placeholder']");
 const upload_dialog = document.getElementById('uploadDialog');
 const upload_dialog_file = document.getElementById('fileInput');
+const state_properties_dialog = document.getElementById('statePropertiesDialog');
 
 // const
 const XAXIS_OFFSET = 65;
@@ -74,8 +75,13 @@ const state = reactive({
         }
     },
     sidebar_datas: {
-        live_viewers: compute_LiveViewers_NumberFormatted(1734),
+        live_viewers: 1734,
+        live_viewers_formatted: compute_LiveViewers_NumberFormatted(1734),
         live_views: 0,
+    },
+    misc_datas: {
+        channel_name: 'Ascend Looks',
+        channel_image: 'https://yt3.ggpht.com/B12N4NdzcLO3dPBqce49f-kStqCVCTKrylZoXvGPEz4FoumrhyGw0iyGS4Z9C0jiUXY_RceW2iY=s176-c-k-c0x00ffffff-no-rj',
     },
 
     chartMain: null,
@@ -137,12 +143,9 @@ const state = reactive({
     },
 
     setLiveViewers(e) {
-        e.preventDefault();
-
-        const val = prompt('Please set number of live viewers (comma is not required)', this.sidebar_datas.live_viewers);
-
+        const val = e.target.value;
         if (val != null) {
-            this.sidebar_datas.live_viewers = compute_LiveViewers_NumberFormatted(val);
+            this.sidebar_datas.live_viewers_formatted = compute_LiveViewers_NumberFormatted(val);
         }
     },
 
@@ -201,23 +204,28 @@ createApp({
     },
     uploadChartMainDatas(e) {
         e.preventDefault();
-        upload_dialog.dataset.target = chart_datas_target.ChartMain;
-        upload_dialog.showModal();
+        readAndAssignChartDatas(e.target.files[0], chart_datas_target.ChartMain);
     },
     uploadChart48HDatas(e) {
         e.preventDefault();
-        upload_dialog.dataset.target = chart_datas_target.Chart48H;
-        upload_dialog.showModal();
+        readAndAssignChartDatas(e.target.files[0], chart_datas_target.Chart48H);
     },
+    uploadChannelImage(e) {
+        e.preventDefault();
+        readAndAssignChannelImage(e.target.files[0]);
+    },
+    showStateEditor(e) {
+        e.preventDefault();
+        state_properties_dialog.showModal();
+    },
+    hideStateEditor(e) {
+        e.preventDefault();
+        state_properties_dialog.close();
+    }
 }).mount('body');
 
 // File
-upload_dialog_file.addEventListener('change', (e) => {
-    upload_dialog.close();
-
-    const target = upload_dialog.dataset.target;
-    const file = upload_dialog_file.files[0];
-
+function readAndAssignChartDatas(file, target) {
     if (!target) {
         alert('Please select a data target');
         return;
@@ -249,7 +257,22 @@ upload_dialog_file.addEventListener('change', (e) => {
             }
         }
     });
-});
+};
+
+function readAndAssignChannelImage(file) {
+    if (!file) {
+        alert('Please select a file first');
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onloadend = (e) => {
+        state.misc_datas.channel_image = reader.result;
+    };
+
+    reader.readAsDataURL(file);
+}
 
 // CHARTS
 function SpinChartMain() {
