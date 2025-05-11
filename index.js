@@ -231,6 +231,13 @@ upload_dialog_file.addEventListener('change', (e) => {
     Papa.parse(file, {
         header: true,
         dynamicTyping: true,
+        transform: function(val, header) {
+            if (header === 'videos') {
+                return val == '' ? [] : val.split(';')
+            } else {
+                return val;
+            }
+        },
         complete: function ({ data }) {
             if (target === chart_datas_target.Chart48H) {
                 state.set48HChartSeries(ComposeDataForChart48H(data));

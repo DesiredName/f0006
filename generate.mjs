@@ -16,12 +16,13 @@ for (let day = 800; day >= 0; day--) {
     const watch = (Math.random() * views).toFixed(2);
     const subscribers = Math.round(Math.random() * watch) * (Math.random() > 0.4 ? -1 : 1);
     const revenue = subscribers > 0 ? (Math.random()).toFixed(2) : 0;
+    const videos = Math.random() > .6 ? ['data/play.jpg'] : Math.random() > .9 ? ['data/play.jpg', 'data/play.jpg'] : [];
 
-    data.push([timestamp, views, watch, subscribers, revenue]);
+    data.push([timestamp, views, watch, subscribers, revenue, videos.join(';')]);
 }
 
 let samples = data.toSorted((a, b) => a[0] > b[0] ? 1 : -1).map(([timestamp, ...a]) => [timestamp.toISOString(), ...a].join(',')).join('\n');
-let output = 'timestamp,views,watch,subscribers,revenue\n'.concat(samples);
+let output = 'timestamp,views,watch,subscribers,revenue,videos\n'.concat(samples);
 
 fs.writeFileSync('./main.csv', output);
 
