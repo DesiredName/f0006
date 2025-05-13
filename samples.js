@@ -11,7 +11,13 @@ const generate_48h_datas = () => {
 
   for (let hour = 49; hour >= 0; hour--) {
     const timestamp = new Date(today - delta * hour);
-    const views = Math.round(Math.random() * 3);
+    const views = Math.random() > 0.95
+      ? 3
+      : Math.random() > 0.85
+        ? 2
+        : Math.random() > 0.75
+          ? 1
+          : 0;
 
     data.push({ timestamp, views });
   }

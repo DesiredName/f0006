@@ -16,7 +16,7 @@ for (let day = 800; day >= 0; day--) {
     const watch = (Math.random() * views).toFixed(2);
     const subscribers = Math.round(Math.random() * watch) * (Math.random() > 0.4 ? -1 : 1);
     const revenue = subscribers > 0 ? (Math.random()).toFixed(2) : 0;
-    const videos = Math.random() > .6 ? 1 : Math.random() > .9 ? 2 : 0;
+    const videos = Math.random() > .8 ? 1 : Math.random() > .85 ? 2 : 0;
 
     data.push([timestamp, views, watch, subscribers, revenue, videos]);
 }
@@ -38,7 +38,7 @@ today = today.getTime();
 
 for (let hour = 49; hour >= 0; hour--) {
     const timestamp = new Date(today - delta * hour);
-    const views = Math.round(Math.random() * 3);
+    const views = Math.random() > 0.98 ? Math.round(Math.random() * 2) : 0;
 
     data.push([timestamp, views]);
 }

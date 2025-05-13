@@ -492,6 +492,7 @@ function SpinChart48H() {
         chart: {
             type: 'column',
             backgroundColor: 'transparent',
+            animation: false,
             height: 80,
             spacingTop: 0,
             spacingLeft: 0,
@@ -518,6 +519,7 @@ function SpinChart48H() {
             lineColor: '#9e9e9e',
             tickWidth: 0,
             tickLength: 6,
+            tickInterval: 1,
             minPadding: 0,
             maxPadding: 0,
             startOnTick: true,
@@ -536,13 +538,15 @@ function SpinChart48H() {
         series: [{
             data: [],
             color: '#41b4d9',
+            borderColor: '#38859E',
+            borderWidth: 1,
             pointWidth: 4,
             grouping: false,
             pointPadding: 0,
-            borderWidth: 0,
             states: {
                 hover: {
-                    color: 'rgba(65, 180, 217, 0.4)'
+                    color: 'rgba(65, 180, 217, 0.4)',
+                    borderColor: 'rgba(65, 179, 217, 0.1)',
                 }
             }
         }],
