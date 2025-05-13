@@ -24,10 +24,10 @@ const aspect_ratio_container_main_chart = document.getElementById('aspect-ratio-
 const XAXIS_OFFSET = 102;
 const XAXIS_LIGHT_COLOR = '#9e9e9e';
 const XAXIS_DARK_COLOR = '#4c4c4c';
-const MAIN_CHART_NORMAL_HEIGHT = 158;
-const MAIN_CHART_FULL_HEIGHT = 192;
+const MAIN_CHART_NORMAL_HEIGHT = 156;
+const MAIN_CHART_FULL_HEIGHT = 189;
 const ASPECT_RATION_CONTAINER_NORMAL_HEIGHT = 168;
-const ASPECT_RATION_CONTAINER_FULL_HEIGHT = 202;
+const ASPECT_RATION_CONTAINER_FULL_HEIGHT = 204;
 const ASPECT_RATION_CONTAINER_NORMAL_MARGIN = 22;
 const ASPECT_RATION_CONTAINER_FULL_MARGIN = 22;
 
@@ -243,7 +243,7 @@ createApp({
     mounted() {
         state.hideDateSelector();
 
-        Highcharts.AST.allowedAttributes.push('data-count');
+        Highcharts.AST.bypassHTMLFiltering = true;
 
         setTimeout(() => {
             SpinChartMain();
@@ -370,7 +370,7 @@ function SpinChartMain() {
                     if (point == null || number_of_videos <= 0) {
                         return `<span class="video_marker empty">0</span>`;
                     } else if (number_of_videos === 1) {
-                        return `<span class="video_marker single">⯈</span>`;
+                        return `<span class="video_marker single">&#11208;</span>`;
                     } else {
                         return `<span class="video_marker">${number_of_videos}</span>`;
                     }
@@ -382,10 +382,12 @@ function SpinChartMain() {
         }, {
             type: 'datetime',
             labels: {
-                align: 'left',
-                y: 24,
+                align: 'center',
+                y: 20,
                 overflow: 'justify',
+                padding: 0,
                 format: '{value:%b %e, %Y}',  // Format: "Jan 1, 2023"
+                useHTML: true,
             },
             lineColor: '#4c4c4c',
             lineWidth: 2,
