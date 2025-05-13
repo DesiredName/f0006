@@ -41,10 +41,10 @@ export function ComposeDataForChart48H(datas) {
 export function ComposeDataForChartMain(datas, selected_date_range_option, selected_view_option) {
     const range = compute_DateRange(selected_date_range_option);
     const noPreviousRange = selected_date_range_option === date_range_option.LIFE;
-    const main_datas = datas.filter(({ timestamp }) => (timestamp > range.curr_from) && (timestamp <= range.curr_till));
+    const main_datas = datas.filter(({ timestamp }) => (timestamp >= range.curr_from) && (timestamp <= range.curr_till));
     const compared_datas = noPreviousRange
         ? null
-        : datas.filter(({ timestamp }) => (timestamp > range.prev_from) && (timestamp <= range.prev_till));
+        : datas.filter(({ timestamp }) => (timestamp >= range.prev_from) && (timestamp <= range.prev_till));
 
     const compute_trend = (figure, prev_figure) => noPreviousRange ? null : figure > prev_figure ? 'up' : figure < prev_figure ? 'down' : null;
     const main_title = ((t) => {
@@ -54,7 +54,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
 
         return range.range_title(f.format(t));
     })(main_datas.reduce((acc, entry) => acc + entry.views, 0));
-    const has_videos = datas.some((entry) => entry.videos > 0);
+    const has_videos = main_datas.some((entry) => entry.videos > 0);
 
     return {
         main_title,

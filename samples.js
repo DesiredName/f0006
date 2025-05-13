@@ -35,8 +35,7 @@ const generate_main_datas = () => {
     const watch = Math.random() * views;
     const subscribers = Math.round(Math.random() * watch) * (Math.random() > 0.4 ? -1 : 1);
     const revenue = subscribers > 0 ? Math.random() : 0;
-    const videos = Math.random() > .6 ? 1 : Math.random() > .9 ? 2 : 0;
-
+    const videos = Math.random() > .9 ? 1 : Math.random() > .95 ? 2 : 0;
     data.push({ timestamp, views, watch, subscribers, revenue, videos });
   }
 

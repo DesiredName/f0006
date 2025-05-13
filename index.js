@@ -17,12 +17,19 @@ const date_range_selector_toggler_el = document.querySelector("[data-id='date_ra
 const date_range_selector_el = document.querySelector("[data-id='date_range_selector']");
 const chart_1_placeholder = document.querySelector("[data-id='chart-1-placeholder']");
 const chart_2_placeholder = document.querySelector("[data-id='chart-2-placeholder']");
-const upload_dialog = document.getElementById('uploadDialog');
-const upload_dialog_file = document.getElementById('fileInput');
 const state_properties_dialog = document.getElementById('statePropertiesDialog');
+const aspect_ratio_container_main_chart = document.getElementById('aspect-ratio-four-one-container');
 
 // const
-const XAXIS_OFFSET = 65;
+const XAXIS_OFFSET = 102;
+const XAXIS_LIGHT_COLOR = '#9e9e9e';
+const XAXIS_DARK_COLOR = '#4c4c4c';
+const MAIN_CHART_NORMAL_HEIGHT = 158;
+const MAIN_CHART_FULL_HEIGHT = 192;
+const ASPECT_RATION_CONTAINER_NORMAL_HEIGHT = 168;
+const ASPECT_RATION_CONTAINER_FULL_HEIGHT = 202;
+const ASPECT_RATION_CONTAINER_NORMAL_MARGIN = 22;
+const ASPECT_RATION_CONTAINER_FULL_MARGIN = 22;
 
 let raw_main_datas = samples_main;
 
@@ -186,7 +193,14 @@ const state = reactive({
         const has_videos = this.view_options_datas.has_videos;
 
         this.chartMain.update({
-            xAxis: [{}, {
+            chart: {
+                height: has_videos ? MAIN_CHART_FULL_HEIGHT : MAIN_CHART_NORMAL_HEIGHT,
+            },
+            xAxis: [{
+                lineColor: has_videos ? XAXIS_LIGHT_COLOR : 'transparent'
+            }, {
+                lineColor: has_videos ? XAXIS_DARK_COLOR : XAXIS_LIGHT_COLOR,
+                lineWidth: has_videos ? 2 : 1,
                 height: has_videos ? XAXIS_OFFSET : undefined,
             }],
             yAxis: {
@@ -198,9 +212,18 @@ const state = reactive({
                 { xAxis: 0, data: this.view_options_datas.videos_label_datas.data },
                 { xAxis: 1, data: datas.data },
             ] : [
+                { xAxis: 0, data: [] },
                 { xAxis: 1, data: datas.data },
             ]
         });
+
+        aspect_ratio_container_main_chart.style.height = (has_videos
+            ? ASPECT_RATION_CONTAINER_FULL_HEIGHT
+            : ASPECT_RATION_CONTAINER_NORMAL_HEIGHT) + 'px';
+
+        aspect_ratio_container_main_chart.style.marginTop = (has_videos
+            ? ASPECT_RATION_CONTAINER_FULL_MARGIN
+            : ASPECT_RATION_CONTAINER_NORMAL_MARGIN) + 'px';
     },
 
     set48HChartSeries(data) {
@@ -304,6 +327,7 @@ function readAndAssignChannelImage(file) {
 function SpinChartMain() {
     state.chartMain = Highcharts.chart(chart_1_placeholder, {
         chart: {
+            animation: false,
             type: 'area',
             backgroundColor: 'transparent',
             height: 160,
@@ -325,7 +349,7 @@ function SpinChartMain() {
         title: false,
         xAxis: [{
             type: 'datetime',
-            lineColor: '#cecece',
+            lineColor: '#9e9e9e',
             minPadding: 0,
             maxPadding: 0,
             startOnTick: true,
@@ -344,9 +368,9 @@ function SpinChartMain() {
                     const number_of_videos = point?.v ?? 0;
 
                     if (point == null || number_of_videos <= 0) {
-                        return ''
+                        return `<span class="video_marker empty">0</span>`;
                     } else if (number_of_videos === 1) {
-                        return `<span class="video_marker single"></span>`;
+                        return `<span class="video_marker single">⯈</span>`;
                     } else {
                         return `<span class="video_marker">${number_of_videos}</span>`;
                     }
@@ -358,18 +382,19 @@ function SpinChartMain() {
         }, {
             type: 'datetime',
             labels: {
-                align: 'center',
+                align: 'left',
                 y: 24,
                 overflow: 'justify',
                 format: '{value:%b %e, %Y}',  // Format: "Jan 1, 2023"
             },
-            lineColor: '#9e9e9e',
+            lineColor: '#4c4c4c',
+            lineWidth: 2,
             tickWidth: 2,
             tickLength: 6,
             height: XAXIS_OFFSET,
             tickPositioner: function (min, max) {
                 const positions = [];
-                const step = Math.ceil((max - min) / 5); // ~5 labels
+                const step = Math.ceil((max - min) / 6); // ~5 labels
                 for (let i = min; i <= max; i += step) {
                     positions.push(i);
                 }

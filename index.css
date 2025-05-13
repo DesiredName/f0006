@@ -70,31 +70,25 @@
   border-radius: 2px;
   min-width: 16px;
   min-height: 16px;
+  max-width: 16px;
+  max-height: 16px;
+  width: 16px;
+  height: 16px;
   display: inline-block;
-  font-size: 10px;
-  line-height: 15px;
+  font-size: 12px;
+  line-height: 16px;
 }
 .video_marker:hover {
   background-color: white !important;
   color: white !important;
 }
 
+.video_marker.empty {
+  background-color: transparent !important;
+  color: transparent !important;
+}
+
 .video_marker.single {
   color: black;
   position: relative;
-}
-.video_marker.single::after {
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  justify-items: center;
-  align-items: center;
-  align-content: center;
-  min-width: 16px;
-  min-height: 16px;
-  top: 0;
-  left: 0;
-  content: "⯈";
-  font-size: 12px;
-  line-height: 16px;
 }
