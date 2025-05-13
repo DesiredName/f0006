@@ -7,19 +7,19 @@
     font-family: "Roboto", "Noto", sans-serif;
 }
 
-[data-id="chart-1-placeholder"] div.highcharts-axis-labels.highcharts-xaxis-labels:nth-of-type(2) > span {
+[data-id="chart-1-placeholder"] div.highcharts-axis-labels.highcharts-xaxis-labels > span {
   color: #aaa !important;
   font-size: 12px !important;
 }
 
-[data-id="chart-1-placeholder"] div.highcharts-axis-labels.highcharts-xaxis-labels:nth-of-type(2) > span:first-child,
-[data-id="chart-1-placeholder"] div.highcharts-axis-labels.highcharts-xaxis-labels:nth-of-type(2) > span:last-child {
+[data-id="chart-1-placeholder"] div.highcharts-axis-labels.highcharts-xaxis-labels > span:first-child,
+[data-id="chart-1-placeholder"] div.highcharts-axis-labels.highcharts-xaxis-labels > span:last-child {
   display: inline-block !important;
   max-width: 50px !important;
   text-overflow: ellipsis !important;
 }
 
-[data-id="chart-1-placeholder"] div.highcharts-axis-labels.highcharts-xaxis-labels:nth-of-type(2) > span:last-child,
+[data-id="chart-1-placeholder"] div.highcharts-axis-labels.highcharts-xaxis-labels > span:last-child,
 [data-id="chart-1-placeholder"] svg.highcharts-root g.highcharts-axis-labels.highcharts-xaxis-labels text:last-child {
   transform: translateX(-12px) !important;
 }
@@ -84,8 +84,8 @@
   width: 16px;
   height: 16px;
   display: inline-block;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 14px;
+  line-height: 15px;
 }
 .video_marker:hover {
   background-color: white !important;
