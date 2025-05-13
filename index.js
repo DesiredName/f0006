@@ -25,7 +25,7 @@ const XAXIS_OFFSET = 102;
 const XAXIS_LIGHT_COLOR = '#9e9e9e';
 const XAXIS_DARK_COLOR = '#4c4c4c';
 const MAIN_CHART_NORMAL_HEIGHT = 156;
-const MAIN_CHART_FULL_HEIGHT = 189;
+const MAIN_CHART_FULL_HEIGHT = 190;
 const ASPECT_RATION_CONTAINER_NORMAL_HEIGHT = 168;
 const ASPECT_RATION_CONTAINER_FULL_HEIGHT = 204;
 const ASPECT_RATION_CONTAINER_NORMAL_MARGIN = 22;
@@ -349,6 +349,7 @@ function SpinChartMain() {
         title: false,
         xAxis: [{
             type: 'datetime',
+            allowOverlap: false,
             lineColor: '#9e9e9e',
             minPadding: 0,
             maxPadding: 0,
@@ -368,11 +369,11 @@ function SpinChartMain() {
                     const number_of_videos = point?.v ?? 0;
 
                     if (point == null || number_of_videos <= 0) {
-                        return `<span class="video_marker empty">0</span>`;
+                        return `<span class="video_marker empty"><span class='figure'>0</span></span>`;
                     } else if (number_of_videos === 1) {
-                        return `<span class="video_marker single">&#11208;</span>`;
+                        return `<span class="video_marker single"><span class='figure'>&#11208;</span></span>`;
                     } else {
-                        return `<span class="video_marker">${number_of_videos}</span>`;
+                        return `<span class="video_marker"><span class='figure'>${number_of_videos}</span></span>`;
                     }
                 },
                 style: {

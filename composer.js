@@ -54,18 +54,37 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
 
         return range.range_title(f.format(t));
     })(main_datas.reduce((acc, entry) => acc + entry.views, 0));
+    
+    //
     const has_videos = main_datas.some((entry) => entry.videos > 0);
+    const { videos_collapse_interval } = range;
+    const videos_label_datas = [];
+
+    let targetIdx = -1;
+    main_datas.forEach((entry, idx) => {
+        if (idx % videos_collapse_interval === 0) {
+            targetIdx++;
+        }
+
+        if (videos_label_datas[targetIdx] != null) {
+            videos_label_datas[targetIdx].v += entry.videos;
+        } else {
+            videos_label_datas.push({
+                x: entry.timestamp,
+                y: 10,
+                v: entry.videos,
+            });
+        }
+    });
+    console.log(videos_label_datas.length)
+    //
 
     return {
         main_title,
         has_videos,
 
         videos_label_datas: {
-            data: main_datas.map((entry) => ({
-                x: entry.timestamp,
-                y: 10,
-                v: entry.videos,
-            }))
+            data: videos_label_datas
         },
 
         [view_option.VIEWS]: ((compute_data, prop_name, figure, prev_figure) => {

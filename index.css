@@ -19,9 +19,9 @@
   text-overflow: ellipsis !important;
 }
 
-[data-id="chart-1-placeholder"] div.highcharts-axis-labels.highcharts-xaxis-labels > span:last-child,
-[data-id="chart-1-placeholder"] svg.highcharts-root g.highcharts-axis-labels.highcharts-xaxis-labels text:last-child {
-  transform: translateX(-12px) !important;
+/* [data-id="chart-1-placeholder"] svg.highcharts-root g.highcharts-axis-labels.highcharts-xaxis-labels text:last-child { */
+[data-id="chart-1-placeholder"] div.highcharts-axis-labels.highcharts-xaxis-labels > span:last-child {
+  transform: translateX(-26px) !important;
 }
 
 /* Tooltip */
@@ -84,12 +84,15 @@
   width: 16px;
   height: 16px;
   display: inline-block;
-  font-size: 14px;
-  line-height: 15px;
+  font-size: 12px;
+  line-height: 16px;
 }
 .video_marker:hover {
   background-color: white !important;
   color: white !important;
+}
+.video_marker:not(.single):not(.empty) > .figure {
+  font-size: 11px;
 }
 
 .video_marker.empty {
@@ -100,4 +103,8 @@
 .video_marker.single {
   color: black;
   position: relative;
+}
+.video_marker.single > .figure {
+  font-size: 14px;
+  line-height: 14px;
 }

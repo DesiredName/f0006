@@ -48,7 +48,7 @@ export const chart_datas_target = Object.freeze({
 
 // VALES
 export class DateRange {
-    constructor(range_title, range_name, curr_from, curr_till, prev_from, prev_till) {
+    constructor(range_title, range_name, curr_from, curr_till, prev_from, prev_till, videos_collapse_interval) {
         this.range_title = range_title;
         this.range_name = range_name;
         this.curr_from = curr_from;
@@ -59,6 +59,7 @@ export class DateRange {
         this.prev_from?.setUTCHours(0, 0, 0, 0);
         this.prev_till = prev_till;
         this.prev_till?.setUTCHours(23, 59, 59, 999);
+        this.videos_collapse_interval = videos_collapse_interval;
     }
 }
 
@@ -80,6 +81,7 @@ export const compute_DateRange = (option) => {
                 curr,
                 new Date(now - (27 * 2 + 1) * day),
                 new Date(now - (27 + 1) * day),
+                4,
             );
             break;
 
@@ -91,6 +93,7 @@ export const compute_DateRange = (option) => {
                 curr,
                 new Date(now - (89 * 2 + 1) * day),
                 new Date(now - (89 + 1) * day),
+                10,
             );
             break;
 
@@ -102,6 +105,7 @@ export const compute_DateRange = (option) => {
                 curr,
                 new Date(now - (364 * 2 + 1) * day),
                 new Date(now - (364 + 1) * day),
+                31,
             );
             break;
 
@@ -113,6 +117,7 @@ export const compute_DateRange = (option) => {
                 curr,
                 null,
                 null,
+                31,
             );
             break;
 
@@ -140,6 +145,7 @@ export const compute_DateRange = (option) => {
                 curr,
                 prev_from,
                 prev_till,
+                31,
             );
             break;
         };
@@ -168,6 +174,7 @@ export const compute_DateRange = (option) => {
                 curr_till,
                 prev_from,
                 prev_till,
+                31,
             );
             break;
         };
@@ -195,6 +202,7 @@ export const compute_DateRange = (option) => {
                 curr,
                 prev_from,
                 prev_till,
+                4,
             );
             break;
         };
@@ -229,6 +237,7 @@ export const compute_DateRange = (option) => {
                 curr_till,
                 prev_from,
                 prev_till,
+                4,
             );
             break;
         };
@@ -265,6 +274,7 @@ export const compute_DateRange = (option) => {
                 curr_till,
                 prev_from,
                 prev_till,
+                4,
             );
             break;
         };
@@ -278,6 +288,7 @@ export const compute_DateRange = (option) => {
                 curr,
                 new Date(now - (6 * 2 + 1) * day),
                 new Date(now - (6 + 1) * day),
+                1,
             );
             break;
     }
