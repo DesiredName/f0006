@@ -533,14 +533,16 @@ function SpinChart48H() {
         series: [{
             data: [],
             color: '#41b4d9',
-            borderWidth: 0,
-            pointWidth: 4,
+            borderWidth: 1,
+            borderColor: '#41b4d9',
+            pointWidth: 3,
             grouping: false,
-            pointPadding: 0,
+            pointPadding: 1,
             states: {
                 hover: {
                     color: 'rgba(65, 180, 217, 0.4)',
-                    borderColor: 'rgba(65, 179, 217, 0.1)',
+                    borderColor: 'rgba(65, 180, 217, 0.4)',
+                    // : 'rgba(65, 179, 217, 0.1)',
                 }
             }
         }],
