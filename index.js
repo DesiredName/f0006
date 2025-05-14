@@ -411,8 +411,8 @@ function SpinChartMain() {
         yAxis: {
             opposite: true,  // Places Y-axis on the right side
             tickAmount: 4,
-            gridLineColor: '#323232',
-            gridLineWidth: 2,
+            gridLineColor: '#3D3D3D',
+            gridLineWidth: 1,
             title: false,
         },
         legend: false,
@@ -538,8 +538,7 @@ function SpinChart48H() {
         series: [{
             data: [],
             color: '#41b4d9',
-            borderColor: '#38859E',
-            borderWidth: 1,
+            borderWidth: 0,
             pointWidth: 4,
             grouping: false,
             pointPadding: 0,
