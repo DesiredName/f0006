@@ -73,6 +73,15 @@
 }
 
 /** Video marker */
+[data-id="chart-1-placeholder"] div.highcharts-axis-labels.highcharts-xaxis-labels > span:has(.video_marker) {
+  width: 16px !important;
+  min-width: 16px !important;
+}
+
+[data-id="chart-1-placeholder"] div.highcharts-axis-labels.highcharts-xaxis-labels > span:has(.video_marker.empty) {
+  display: none !important;
+}
+
 .video_marker {
   background-color: #9e9e9e;
   color: white;
@@ -87,9 +96,11 @@
   font-size: 12px;
   line-height: 16px;
 }
-.video_marker:hover {
+.video_marker:hover > .figure > svg {
   background-color: white !important;
+  fill: white !important;
   color: white !important;
+  border-radius: 2px;
 }
 .video_marker:not(.single):not(.empty) > .figure {
   font-size: 11px;
