@@ -443,7 +443,8 @@ export const compute_PercentFormatted = (val) => {
 
 // CHARTS
 export const addVerticalLine = (chart, renderer) => {
-    const xAxis = chart.xAxis[0];
+    const xAxis = chart.xAxis[1] ?? chart.xAxis[0];
+    console.dir(xAxis);
     const verticalLine = renderer
         .path([['M', 0, 10], ['L', 0, chart.plotHeight + 10]])
         .attr({
@@ -457,7 +458,7 @@ export const addVerticalLine = (chart, renderer) => {
     verticalLine.hide();
 
     chart.container.addEventListener('pointermove', (event) => {
-        const nearest = chart.series?.[0]?.searchPoint?.(chart.pointer.normalize(event), true);
+        const nearest = xAxis.series?.[0]?.searchPoint?.(chart.pointer.normalize(event), true);
         const idx = nearest?.key;
 
         if (!!idx && idx >= xAxis.min && idx <= xAxis.max) {
