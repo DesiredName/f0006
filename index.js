@@ -543,8 +543,6 @@ function SpinChart48H() {
             states: {
                 hover: {
                     color: 'rgba(65, 180, 217, 0.4)',
-                    borderColor: 'rgba(65, 180, 217, 0.4)',
-                    // : 'rgba(65, 179, 217, 0.1)',
                 }
             },
         }],
