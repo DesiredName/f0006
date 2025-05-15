@@ -30,6 +30,7 @@ export function ComposeDataForChart48H(datas) {
     }
 
     return datas.slice(-48).map((entry, idx) => {
+        console.log(idx)
         return {
             x: idx,
             y: Number(entry.views),
@@ -76,7 +77,6 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
             });
         }
     });
-    console.log(videos_label_datas.length)
     //
 
     return {
