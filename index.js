@@ -493,6 +493,9 @@ function SpinChart48H() {
             spacingLeft: 0,
             spacingBottom: 22,
             spacingRight: 0,
+            style: {
+                'shape-rendering': 'crispEdges'
+            }
         },
         credits: {
             enabled: false,
@@ -533,9 +536,8 @@ function SpinChart48H() {
         series: [{
             data: [],
             color: '#41b4d9',
-            borderWidth: 1,
-            borderColor: '#41b4d9',
-            pointWidth: 3,
+            pointWidth: 5,
+            borderWidth: 0,
             grouping: false,
             pointPadding: 1,
             states: {
@@ -544,7 +546,7 @@ function SpinChart48H() {
                     borderColor: 'rgba(65, 180, 217, 0.4)',
                     // : 'rgba(65, 179, 217, 0.1)',
                 }
-            }
+            },
         }],
         tooltip: {
             animation: false,
@@ -563,5 +565,10 @@ function SpinChart48H() {
                 return '<span class="tooltip-date">' + this.custom?.title + '</span><br/><br/><span class="tooltip-value">' + this.y + "</span>";
             }
         },
+        plotOptions: {
+            series: {
+                crisp: true,
+            }
+        }
     });
 }
