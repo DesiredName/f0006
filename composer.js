@@ -62,19 +62,23 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
     const videos_label_datas = [];
 
     let targetIdx = -1;
+    let leftDataToCombine = 0;
     main_datas.forEach((entry, idx) => {
-        if (idx % videos_collapse_interval === 0) {
-            targetIdx++;
-        }
-
-        if (videos_label_datas[targetIdx] != null) {
-            videos_label_datas[targetIdx].v += entry.videos;
+        if (entry.videos > 0) {
+            if (leftDataToCombine <= 0) {
+                targetIdx++;
+                leftDataToCombine = videos_collapse_interval;
+                videos_label_datas.push({
+                    x: entry.timestamp,
+                    y: 10,
+                    v: entry.videos,
+                });
+            } else {
+                leftDataToCombine--;
+                videos_label_datas[targetIdx].v += entry.videos;
+            }
         } else {
-            videos_label_datas.push({
-                x: entry.timestamp,
-                y: 10,
-                v: entry.videos,
-            });
+            leftDataToCombine--;
         }
     });
     //
