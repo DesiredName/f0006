@@ -168983,7 +168983,7 @@
   <script src="ripple-effect.js"></script>
   <script src="index.js" type="module" defer></script>
 
-  <dialog id="statePropertiesDialog">
+  <dialog id="statePropertiesDialog" style="font-size: 16px;">
     <div style="display: flex; flex-flow: column nowrap; gap: 20px;">
       <div>
         <div><h3>Channel properties:</h3></div>
@@ -168999,10 +168999,51 @@
           <label>Value: <input :value="state.sidebar_datas.live_viewers" @input="state.setLiveViewers"/></label>
         </div>
       </div>
-      <div>
-        <div><h3>Main chart data</h3></div>
+      <div style="display: flex; flex-flow: row nowrap; gap: 20px;">
         <div>
-          <label>Upload data: <input type="file" id="mainChartData" accept=".csv,.txt" @change="uploadChartMainDatas"/></label>
+          <h3>Main chart data</h3>
+          <div>
+            <label>Upload data: <input type="file" id="mainChartData" accept=".csv,.txt" @change="uploadChartMainDatas"/></label>
+          </div>
+        </div>
+        <div>
+          <h4>Generator options</h4>
+          <div>
+            <div>
+              <h5>Views</h5>
+              <div>
+                <label>Per day:    <input type="number" min="0"         step="100"  :value="state.generator_options.views.amount" @change="state.generator_options.views.amount = $event.target.valueAsNumber" /></label>
+                <label>Randomness: <input type="number" min="0" max="1" step="0.01" :value="state.generator_options.views.jagger" @change="state.generator_options.views.jagger = $event.target.valueAsNumber" /></label>
+              </div>
+            </div>
+            <div>
+              <h5>Subscribers</h5>
+              <div>
+                <label>Subs/Views: <input type="number" min="0"         step="100"  :value="state.generator_options.views_to_subscribers.split"      @change="state.generator_options.views_to_subscribers.split = $event.target.valueAsNumber" /></label>
+                <label>Multiplier: <input type="number" min="0"                     :value="state.generator_options.views_to_subscribers.multiplier" @change="state.generator_options.views_to_subscribers.multiplier = $event.target.valueAsNumber" /></label>
+                <label>Randomness: <input type="number" min="0" max="1" step="0.01" :value="state.generator_options.views_to_subscribers.jagger"     @change="state.generator_options.views_to_subscribers.jagger = $event.target.valueAsNumber" /></label>
+              </div>
+            </div>
+            <div>
+              <h5>Watch</h5>
+              <div>
+                <label>Hour/Views: <input type="number" min="0"         step="100"  :value="state.generator_options.views_to_watch.split"      @change="state.generator_options.views_to_watch.split = $event.target.valueAsNumber" /></label>
+                <label>Multiplier: <input type="number" min="0"                     :value="state.generator_options.views_to_watch.multiplier" @change="state.generator_options.views_to_watch.multiplier = $event.target.valueAsNumber" /></label>
+                <label>Randomness: <input type="number" min="0" max="1" step="0.01" :value="state.generator_options.views_to_watch.jagger"     @change="state.generator_options.views_to_watch.jagger = $event.target.valueAsNumber" /></label>
+              </div>
+            </div>
+            <div>
+              <h5>Revenue</h5>
+              <div>
+                <label>Revn/Views: <input type="number" min="0"         step="100"  :value="state.generator_options.views_to_revenue.split"      @change="state.generator_options.views_to_revenue.split = $event.target.valueAsNumber" /></label>
+                <label>Multiplier: <input type="number" min="0"                     :value="state.generator_options.views_to_revenue.multiplier" @change="state.generator_options.views_to_revenue.multiplier = $event.target.valueAsNumber" /></label>
+                <label>Randomness: <input type="number" min="0" max="1" step="0.01" :value="state.generator_options.views_to_revenue.jagger"     @change="state.generator_options.views_to_revenue.jagger = $event.target.valueAsNumber" /></label>
+              </div>
+            </div>
+          </div>
+          <div>
+            <button type="button" @click="updateChartMainWithGenerator">Apply</button>
+          </div>
         </div>
       </div>
       <div>

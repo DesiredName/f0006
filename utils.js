@@ -444,7 +444,7 @@ export const compute_PercentFormatted = (val) => {
 // CHARTS
 export const addVerticalLine = (chart, renderer) => {
     const xAxis = chart.xAxis[1] ?? chart.xAxis[0];
-    console.dir(xAxis);
+
     const verticalLine = renderer
         .path([['M', 0, 10], ['L', 0, chart.plotHeight + 10]])
         .attr({

@@ -9,7 +9,7 @@ import {
     chart_datas_target,
 } from './utils.js';
 import { ComposeDataForChart48H, ComposeDataForChartMain } from './composer.js';
-import { samples_48h, samples_main } from './samples.js';
+import { generator_options, generate_48h_datas, generate_main_datas } from './samples.js';
 import TrendIcon from './TrendIcon.js';
 import ArrowTemplate from './arrow.js';
 
@@ -32,7 +32,8 @@ const ASPECT_RATION_CONTAINER_FULL_HEIGHT = 204;
 const ASPECT_RATION_CONTAINER_NORMAL_MARGIN = 22;
 const ASPECT_RATION_CONTAINER_FULL_MARGIN = 22;
 
-let raw_main_datas = samples_main;
+let raw_main_datas = [];
+let raw_48_datas = [];
 
 const state = reactive({
     date_range_option,
@@ -45,6 +46,7 @@ const state = reactive({
     selected_view_option_el: null,
 
     //
+    generator_options,
     view_options_datas: {
         main_title: '',
         has_videos: false,
@@ -246,6 +248,9 @@ createApp({
 
         Highcharts.AST.bypassHTMLFiltering = true;
 
+        raw_main_datas = generate_main_datas(state.generator_options);
+        raw_48_datas = generate_48h_datas();
+
         setTimeout(() => {
             SpinChartMain();
             SpinChart48H();
@@ -255,13 +260,22 @@ createApp({
 
             setTimeout(() => {
                 state.setMainChartSeries(state.view_options_datas[view_option.VIEWS]);
-                state.set48HChartSeries(ComposeDataForChart48H(samples_48h));
+                state.set48HChartSeries(ComposeDataForChart48H(raw_48_datas));
             }, 1000);
         }, 1000);
     },
     uploadChartMainDatas(e) {
         e.preventDefault();
         readAndAssignChartDatas(e.target.files[0], chart_datas_target.ChartMain);
+    },
+    updateChartMainWithGenerator(e) {
+        e.preventDefault();
+        state_properties_dialog.close();
+        
+        setTimeout(() => {
+            raw_main_datas = generate_main_datas(state.generator_options);
+            state.selectChartView(state.selected_view_option, true);
+        }, 500);
     },
     uploadChart48HDatas(e) {
         e.preventDefault();

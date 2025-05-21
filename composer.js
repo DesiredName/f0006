@@ -30,7 +30,6 @@ export function ComposeDataForChart48H(datas) {
     }
 
     return datas.slice(-48).map((entry, idx) => {
-        console.log(idx)
         return {
             x: idx,
             y: Number(entry.views),
