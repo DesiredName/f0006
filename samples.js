@@ -25,10 +25,7 @@ export const generate_48h_datas = (generator_options) => {
   const delta = 60 * 60 * 1000;
 
   let today = new Date();
-  today.setUTCHours(0);
-  today.setUTCMinutes(0);
-  today.setUTCSeconds(0);
-  today.setUTCMilliseconds(0);
+  today.setUTCHours(0, 0, 0, 0);
   today = today.getTime();
 
   for (let hour = 49; hour >= 0; hour--) {
@@ -51,10 +48,7 @@ export const generate_main_datas = (generator_options) => {
   const data = [];
   const delta = 24 * 60 * 60 * 1000;
   let today = new Date();
-  today.setUTCHours(0);
-  today.setUTCMinutes(0);
-  today.setUTCSeconds(0);
-  today.setUTCMilliseconds(0);
+  today.setUTCHours(0, 0, 0, 0);
   today = today.getTime();
 
   const p = (base, jagger) => base + jagger * (base * Math.random() * (Math.random() > 0.5 ? -1 : 1));
@@ -92,7 +86,50 @@ export const generate_main_datas = (generator_options) => {
     );
 
     const videos = Math.random() > .8 ? 1 : Math.random() > .85 ? 2 : 0;
-    
+
+    data.push({ timestamp, views, watch, subscribers, revenue, videos });
+  }
+
+  return data.toSorted((a, b) => a[0] > b[0] ? 1 : -1);
+}
+
+export const generate_main_datas_from_file = (generator_options, datas) => {
+  const data = [];
+
+  const p = (base, jagger) => base + jagger * (base * Math.random() * (Math.random() > 0.5 ? -1 : 1));
+  const t = (base, split, multiplier, jagger) => {
+    return p(base / split, jagger) * multiplier;
+  }
+
+  for (const entry of datas) {
+    const {
+      timestamp,
+      views,
+      videos
+    } = entry;
+
+    const subscribers = Math.floor(t(
+      views,
+      generator_options.views_to_subscribers.split,
+      generator_options.views_to_subscribers.multiplier,
+      generator_options.views_to_subscribers.jagger,
+    ));
+
+    let revenue = t(
+      views,
+      generator_options.views_to_revenue.split,
+      generator_options.views_to_revenue.multiplier,
+      generator_options.views_to_revenue.jagger,
+    );
+    revenue = revenue > 0 ? revenue : 0;
+
+    let watch = t(
+      views,
+      generator_options.views_to_watch.split,
+      generator_options.views_to_watch.multiplier,
+      generator_options.views_to_watch.jagger,
+    );
+
     data.push({ timestamp, views, watch, subscribers, revenue, videos });
   }
 

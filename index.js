@@ -9,7 +9,7 @@ import {
     chart_datas_target,
 } from './utils.js';
 import { ComposeDataForChart48H, ComposeDataForChartMain } from './composer.js';
-import { generator_options, generate_48h_datas, generate_main_datas } from './samples.js';
+import { generator_options, generate_48h_datas, generate_main_datas, generate_main_datas_from_file } from './samples.js';
 import TrendIcon from './TrendIcon.js';
 import ArrowTemplate from './arrow.js';
 
@@ -316,7 +316,7 @@ function readAndAssignChartDatas(file, target) {
             }
 
             if (target === chart_datas_target.ChartMain) {
-                raw_main_datas = Object.freeze(data);
+                raw_main_datas = Object.freeze(generate_main_datas_from_file(state.generator_options, data));
                 state.selectDateRangeId(state.selected_date_range_option);
             }
         }
