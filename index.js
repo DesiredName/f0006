@@ -33,6 +33,7 @@ const ASPECT_RATION_CONTAINER_NORMAL_MARGIN = 22;
 const ASPECT_RATION_CONTAINER_FULL_MARGIN = 22;
 
 let raw_main_datas = [];
+let raw_main_datas_file_content = null;
 let raw_48_datas = [];
 
 const state = reactive({
@@ -114,6 +115,7 @@ const state = reactive({
     chart48h: null,
 
     isDateSelectorVisible: false,
+    isMainDatasFileIsUsed: false,
     selectedDateRange_DaysFormatted: compute_DateRange_DaysFormatted(date_range_option.L7D),
     selectedDateRange_Title: date_range[date_range_option.L7D],
 
@@ -149,7 +151,7 @@ const state = reactive({
         this.selectedDateRange_DaysFormatted = compute_DateRange_DaysFormatted(option);
 
         this.view_options_datas = ComposeDataForChartMain(raw_main_datas, option, this.selected_view_option);
-
+        
         if (updateChart === true) {
             this.setMainChartSeries(this.view_options_datas[this.selected_view_option]);
         }
@@ -161,6 +163,7 @@ const state = reactive({
         this.selected_view_option_el?.classList.add('iron-selected');
 
         this.selected_view_option = option;
+
         this.view_options_datas = ComposeDataForChartMain(raw_main_datas, this.selected_date_range_option, option);
 
         if (updateChart === true) {
@@ -268,12 +271,21 @@ createApp({
         e.preventDefault();
         readAndAssignChartDatas(e.target.files[0], chart_datas_target.ChartMain);
     },
+    dropMainDatasFile(e) {
+        e.preventDefault();
+        state.isMainDatasFileIsUsed = false;
+    },
     updateChartMainWithGenerator(e) {
         e.preventDefault();
         state_properties_dialog.close();
         
         setTimeout(() => {
-            raw_main_datas = generate_main_datas(state.generator_options);
+            if (state.isMainDatasFileIsUsed && raw_main_datas_file_content != null) {
+                raw_main_datas = Object.freeze(generate_main_datas_from_file(state.generator_options, raw_main_datas_file_content));
+            } else {
+                raw_main_datas = generate_main_datas(state.generator_options);
+            }
+
             state.selectChartView(state.selected_view_option, true);
         }, 500);
     },
@@ -307,6 +319,8 @@ function readAndAssignChartDatas(file, target) {
         return;
     }
 
+    state.isMainDatasFileIsUsed = false;
+
     Papa.parse(file, {
         header: true,
         dynamicTyping: true,
@@ -316,7 +330,9 @@ function readAndAssignChartDatas(file, target) {
             }
 
             if (target === chart_datas_target.ChartMain) {
-                raw_main_datas = Object.freeze(generate_main_datas_from_file(state.generator_options, data));
+                state.isMainDatasFileIsUsed = true;
+                raw_main_datas_file_content = data;
+                raw_main_datas = Object.freeze(generate_main_datas_from_file(state.generator_options, raw_main_datas_file_content));
                 state.selectDateRangeId(state.selected_date_range_option);
             }
         }

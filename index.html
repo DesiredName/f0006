@@ -169005,8 +169005,17 @@
           <div>
             <label>Upload data: <input type="file" id="mainChartData" accept=".csv,.txt" @change="uploadChartMainDatas"/></label>
           </div>
+          <div
+            v-effect="$el.style.display = state.isMainDatasFileIsUsed ? 'flex' : 'none';"
+            style="margin-top: 20px; padding: 10px; background-color: rgba(128, 20, 20, 30%);"
+          >
+            <div style="color: rgb(128, 20, 20); display: flex; flex-flow: row; justify-content: space-between; width: 100%;">
+              <span>Uploaded file is used</span>
+              <button type="button" @click="dropMainDatasFile">drop file content</button>
+            </div>
+          </div>
         </div>
-        <div>
+        <div style="padding: 20px; margin-left: -20px;" v-effect="$el.style.backgroundColor = state.isMainDatasFileIsUsed ? 'rgba(128, 20, 20, 30%)' : 'transparent' ">
           <h4>Generator options</h4>
           <div>
             <div>
