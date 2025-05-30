@@ -169018,7 +169018,7 @@
         <div style="padding: 20px; margin-left: -20px;" v-effect="$el.style.backgroundColor = state.isMainDatasFileIsUsed ? 'rgba(128, 20, 20, 30%)' : 'transparent' ">
           <h4>Generator options</h4>
           <div>
-            <div>
+            <div v-effect="$el.style = state.isMainDatasFileIsUsed ? 'pointer-events: none; opacity: 0.5; background-color: gray !important;' : '' ">
               <h5>Views</h5>
               <div>
                 <label>Per day:    <input type="number" min="0"         step="100"  :value="state.generator_options.views.amount" @change="state.generator_options.views.amount = $event.target.valueAsNumber" /></label>
