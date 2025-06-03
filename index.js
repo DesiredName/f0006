@@ -519,7 +519,7 @@ function SpinChart48H() {
             backgroundColor: 'transparent',
             animation: false,
             height: 80,
-            width: 280,
+            width: 276,
             spacingTop: 0,
             spacingLeft: 0,
             spacingBottom: 22,

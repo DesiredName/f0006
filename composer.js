@@ -224,7 +224,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
 
             const f = new Intl.NumberFormat('en', {
                 style: 'currency',
-                notation: 'compact',
+                // notation: 'compact',
                 compactDisplay: 'short',
                 currencySign: 'standard',
                 currencyDisplay: 'symbol',
