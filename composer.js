@@ -103,6 +103,8 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
             const f = new Intl.NumberFormat('en', {
                 notation: 'compact',
                 compactDisplay: 'short',
+                minimumFractionDigits: 1,
+                maximumFractionDigits: 1,
             });
             const ft = new Intl.NumberFormat('en', {
                 notation: 'compact',
@@ -120,7 +122,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
                 yAxisFormatter: function () { return this.value === 0 ? 0 : ft.format(this.value); },
                 data: compute_data ? main_datas.map((entry) => ({
                     x: entry.timestamp,
-                    y: entry[prop_name],
+                    y: entry[prop_name] ?? 0,
                     t: fd.format(entry[prop_name]),
                     v: entry.videos,
                 })) : [],
@@ -145,6 +147,8 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
             const f = new Intl.NumberFormat('en', {
                 notation: 'compact',
                 compactDisplay: 'short',
+                minimumFractionDigits: 1,
+                maximumFractionDigits: 1,
             });
             const ft = new Intl.NumberFormat('en', {
                 notation: 'standard',
@@ -159,7 +163,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
                 yAxisFormatter: function () { return ft.format(this.value); },
                 data: compute_data ? main_datas.map((entry) => ({
                     x: entry.timestamp,
-                    y: entry[prop_name],
+                    y: entry[prop_name] ?? 0,
                     t: ft.format(entry[prop_name]),
                     v: entry.videos,
                 })) : [],
@@ -184,7 +188,9 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
             const f = new Intl.NumberFormat('en', {
                 notation: 'compact',
                 compactDisplay: 'short',
-                signDisplay: "always"
+                signDisplay: "always",
+                minimumFractionDigits: 1,
+                maximumFractionDigits: 1,
             });
             const ft = new Intl.NumberFormat('en', {
                 notation: 'compact',
@@ -200,7 +206,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
                 yAxisFormatter: function () { return this.value === 0 ? 0 : ft.format(this.value); },
                 data: compute_data ? main_datas.map((entry) => ({
                     x: entry.timestamp,
-                    y: entry[prop_name],
+                    y: entry[prop_name] ?? 0,
                     t: fd.format(entry[prop_name]),
                     v: entry.videos
                 })) : [],
@@ -239,7 +245,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
                 yAxisFormatter: function () { return f.format(this.value); },
                 data: compute_data ? main_datas.map((entry) => ({
                     x: entry.timestamp,
-                    y: entry[prop_name],
+                    y: entry[prop_name] ?? 0,
                     t: f.format(entry[prop_name]),
                     v: entry.videos
                 })) : [],

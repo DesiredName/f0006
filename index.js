@@ -439,6 +439,7 @@ function SpinChartMain() {
             gridLineColor: '#3D3D3D',
             gridLineWidth: 1,
             title: false,
+            zIndex: 1,
         },
         legend: false,
         series: [{
@@ -450,6 +451,7 @@ function SpinChartMain() {
             lineWidth: 0,
             fillColor: 'transparent',
             enableMouseTracking: false,
+            clip: false,
         }, {
             xAxis: 1,
             data: [],
@@ -459,7 +461,8 @@ function SpinChartMain() {
             fillColor: 'rgba(65, 180, 217, 0.1)',
             marker: {
                 symbol: 'circle'
-            }
+            },
+            clip: false,
         }],
         tooltip: {
             animation: false,

@@ -47,6 +47,7 @@
 .highcharts-tooltip .tooltip-value {
     font-size: 22px;
     font-family: "Roboto", "Noto", sans-serif;
+    font-weight: 100;
     fill: rgba(65, 180, 217, 1) !important;
 }
 
