@@ -85,7 +85,7 @@ export const generate_main_datas = (generator_options) => {
       generator_options.views_to_watch.jagger,
     );
 
-    const videos = Math.random() > .8 ? 1 : Math.random() > .85 ? 2 : Math.random() > .35 ? 0 : 's';
+    const videos = Math.random() > .8 ? 1 : Math.random() > .85 ? 2 : 0;
 
     data.push({ timestamp, views, watch, subscribers, revenue, videos });
   }
