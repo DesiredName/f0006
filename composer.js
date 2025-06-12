@@ -95,7 +95,6 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
         }
     });
     //
-    console.log(videos_label_datas)
 
     return {
         main_title,

@@ -195,6 +195,10 @@ const state = reactive({
         this.sidebar_datas.top_content[idx].viewsFormatted = compute_LiveViewers_NumberFormatted(val);
     },
 
+    updateMainChartSeries() {
+        this.setMainChartSeries(this.view_options_datas[this.selected_view_option]);
+    },
+
     setMainChartSeries(datas) {
         const has_videos = this.view_options_datas.has_videos;
 
@@ -251,38 +255,53 @@ createApp({
 
         Highcharts.AST.bypassHTMLFiltering = true;
 
-// (function(H) {
-//     const listeners = new Map();
+(function(H) {
+    const listeners = new Map();
 
-//     const clearHandlers = () => {
-//         for(const [element, listener] of listeners) {
-//             element.removeEventListener('click', listener);
-//         }
+    const clearHandlers = () => {
+        for(const [element, listener] of listeners) {
+            element.removeEventListener('click', listener);
+        }
 
-//         listeners.clear();
-//     }
+        listeners.clear();
+    }
     
-//     H.wrap(H.Axis.prototype, 'render', function(proceed) {
-//         proceed.apply(this, Array.prototype.slice.call(arguments, 1));
+    H.wrap(H.Axis.prototype, 'render', function(proceed) {
+        proceed.apply(this, Array.prototype.slice.call(arguments, 1));
         
-        
-//         if (this.coll === 'xAxis' && this.userOptions.id === 'video-axis') {
-//             clearHandlers();
+        if (this.coll === 'xAxis' && this.userOptions.id === 'video-axis') {
+            clearHandlers();
             
-//             for (const key in this.ticks) {
-//                 const element = this.ticks[key].label.element;
+            for (const key in this.ticks) {
+                const tick = this.ticks[key];
+                const element = tick.label.element;
                 
-//                 if (listeners.has(element) !== true) {
-//                     const listener = (e) => console.log(e.target)
+                if (listeners.has(element) !== true) {
+                    const listener = function (e) {
+                        state.view_options_datas.videos_label_datas.data.forEach((point) => {
+                            if (point.x.getTime() == tick.pos) {
+                                if (point.prev == null) {
+                                    point.prev = point.v;
+                                    point.v = point.v != 's' ? 's' : 1;
+                                } else {
+                                    const prev = point.prev;
+                                    point.prev = point.v;
+                                    point.v = prev;                                    
+                                }
+                                
+                                state.updateMainChartSeries();
+                            }
+                        })
+                    };
                     
-//                     listeners.set(element, listener);
+                    listeners.set(element, listener);
                     
-//                     element.addEventListener('click', listener);
-//                 }
-//             }
-//         }
-//     });
-// }(Highcharts));
+                    element.addEventListener('click', listener);
+                }
+            }
+        }
+    });
+}(Highcharts));
 
         raw_main_datas = generate_main_datas(state.generator_options);
         raw_48_datas = generate_48h_datas();
