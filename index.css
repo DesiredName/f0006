@@ -97,7 +97,7 @@
   font-size: 12px;
   line-height: 16px;
 }
-.video_marker:hover > .figure > svg {
+.video_marker:not(.short):hover > .figure > svg {
   background-color: white !important;
   fill: white !important;
   color: white !important;
@@ -110,6 +110,15 @@
 .video_marker.empty {
   background-color: transparent !important;
   color: transparent !important;
+}
+
+.video_marker.short {
+  color: #9e9e9e !important;
+  background-color: transparent !important;
+}
+
+.video_marker.short:hover {
+  color: white !important;
 }
 
 .video_marker.single {

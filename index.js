@@ -251,6 +251,39 @@ createApp({
 
         Highcharts.AST.bypassHTMLFiltering = true;
 
+// (function(H) {
+//     const listeners = new Map();
+
+//     const clearHandlers = () => {
+//         for(const [element, listener] of listeners) {
+//             element.removeEventListener('click', listener);
+//         }
+
+//         listeners.clear();
+//     }
+    
+//     H.wrap(H.Axis.prototype, 'render', function(proceed) {
+//         proceed.apply(this, Array.prototype.slice.call(arguments, 1));
+        
+        
+//         if (this.coll === 'xAxis' && this.userOptions.id === 'video-axis') {
+//             clearHandlers();
+            
+//             for (const key in this.ticks) {
+//                 const element = this.ticks[key].label.element;
+                
+//                 if (listeners.has(element) !== true) {
+//                     const listener = (e) => console.log(e.target)
+                    
+//                     listeners.set(element, listener);
+                    
+//                     element.addEventListener('click', listener);
+//                 }
+//             }
+//         }
+//     });
+// }(Highcharts));
+
         raw_main_datas = generate_main_datas(state.generator_options);
         raw_48_datas = generate_48h_datas();
 
@@ -379,6 +412,7 @@ function SpinChartMain() {
         },
         title: false,
         xAxis: [{
+            id: 'video-axis',
             type: 'datetime',
             allowOverlap: false,
             lineColor: '#9e9e9e',
@@ -463,6 +497,12 @@ function SpinChartMain() {
                 symbol: 'circle'
             },
             clip: false,
+            events: {
+                click: function(event) {
+                    console.log(event)
+                    console.log(event.point)
+                },
+            },
         }],
         tooltip: {
             animation: false,

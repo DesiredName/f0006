@@ -19,7 +19,7 @@ import { generator_options } from './samples.js';
             p(generator_options.views.amount, generator_options.views.jagger)
         );
 
-        const videos = Math.random() > .8 ? 1 : Math.random() > .85 ? 2 : 0;
+        const videos = Math.random() > .8 ? 1 : Math.random() > .85 ? 2 : Math.random() > .35 ? 0 : 's';
 
         data.push({ timestamp, views, videos });
     }

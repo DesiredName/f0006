@@ -56,7 +56,7 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
     })(main_datas.reduce((acc, entry) => acc + entry.views, 0));
     
     //
-    const has_videos = main_datas.some((entry) => entry.videos > 0);
+    const has_videos = main_datas.some((entry) => entry.videos != 0);
     const { videos_collapse_interval } = range;
     const videos_label_datas = [];
 
@@ -74,13 +74,28 @@ export function ComposeDataForChartMain(datas, selected_date_range_option, selec
                 });
             } else {
                 leftDataToCombine--;
-                videos_label_datas[targetIdx].v += entry.videos;
+                videos_label_datas[targetIdx].v == 's' 
+                    ? videos_label_datas[targetIdx].v = 1 + entry.videos
+                    : videos_label_datas[targetIdx].v += entry.videos;
+            }
+        } else if (entry.videos == 's') {
+            if (leftDataToCombine <= 0) {
+                targetIdx++;
+                leftDataToCombine = videos_collapse_interval;
+                videos_label_datas.push({
+                    x: entry.timestamp,
+                    y: 10,
+                    v: 's',
+                });
+            } else {
+                leftDataToCombine--;
             }
         } else {
             leftDataToCombine--;
         }
     });
     //
+    console.log(videos_label_datas)
 
     return {
         main_title,
